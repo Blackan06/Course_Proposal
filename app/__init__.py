@@ -1,4 +1,4 @@
-from flask import Flask, session, jsonify, make_response
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 import os
@@ -6,12 +6,10 @@ from .routes import main
 from .services.user_service import  User
 from flask_login import LoginManager
 from sqlalchemy.exc import SQLAlchemyError
-from .models.db import db
+from .models.data_model import db
 from flask_migrate import Migrate
 from functools import wraps
-from .middlewares.auth_middleware import token_required
-from werkzeug.middleware.dispatcher import DispatcherMiddleware
-
+from flask_pymongo import PyMongo
 
 
 
@@ -27,6 +25,8 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
     # Cấu hình token
     app.config['SECRET_KEY'] = f"{os.getenv('SECRET_KEY')}"
+
+    
 
     # Cấu hình SQLAlchemy cho models
     db.init_app(app)

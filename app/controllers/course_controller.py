@@ -11,9 +11,22 @@ course_controller = Blueprint('course_controller', __name__, url_prefix='/course
 @login_required
 def index():
     courses = CourseService.get_all_courses()
-    return render_template('courses/index.html', courses=courses)
+    courses_with_base64_images = [
+        {
+            'course_id': course.course_id,
+            'course_name': course.course_name,
+            'course_description': course.course_description,
+            'course_rate': course.course_rate,
+            'course_path': course.course_path,         
+            'provider': course.provider,  
+            'category': course.category,
+            'course_image': CourseService.convert_image_to_base64(course.course_image),
+        }
+        for course in courses
+    ]
+    return render_template('courses/index.html', courses=courses_with_base64_images)
 
-@course_controller.route('/create', methods=['GET','POST'])
+@course_controller.route('/create', methods=['GET', 'POST'])
 @login_required
 def create():
     try:
@@ -24,37 +37,43 @@ def create():
             course_path = request.form['course_path']
             provider_id = request.form['provider_id']
             category_id = request.form['category_id']
-
+            course_image = request.files['course_image']
             CourseService.create_course(
                 course_name,
                 course_description,
                 course_rate,
                 course_path,
                 provider_id,
-                category_id
+                category_id,
+                course_image
             )
             return redirect(url_for('main.course_controller.index'))
         else:
             providers = ProviderService.get_all_provider()
             categories = CategoryService.get_all_category()
-            return render_template('courses/create.html', providers=providers,categories=categories)
+            return render_template('courses/create.html', providers=providers, categories=categories)
 
-    except Exception as e:
+    except ValueError as e:
         return jsonify(error=str(e)), 400
 
-@course_controller.route('/edit/<int:course_id>', methods=['GET','POST'])
+@course_controller.route('/edit/<int:course_id>', methods=['GET', 'POST'])
 @login_required
 def edit(course_id):
     try:
+        course = Course.query.get(course_id)
+
+        if not course:
+            # Handle the case where the course with the given ID doesn't exist.
+            return jsonify(error=f"Course with ID {course_id} not found"), 404
+
         if request.method == 'POST':
-            course = Course.query.get(course_id)
             new_course_name = request.form['course_name']
             new_course_description = request.form['course_description']
             new_course_rate = request.form['course_rate']
             new_course_path = request.form['course_path']
             new_provider_id = request.form['provider_id']
             new_category_id = request.form['category_id']
-
+            new_course_image = request.files['course_image']
             CourseService.edit_course(
                 course_id,
                 new_course_name,
@@ -62,17 +81,17 @@ def edit(course_id):
                 new_course_rate,
                 new_course_path,
                 new_provider_id,
-                new_category_id
+                new_category_id,
+                new_course_image
             )
-            return redirect(url_for('course_controller.index'))
+            return redirect(url_for('main.course_controller.index'))
         else:
             providers = ProviderService.get_all_provider()
             categories = CategoryService.get_all_category()
-            return render_template('courses/edit.html',providers=providers,categories=categories)
+            return render_template('courses/edit.html', course=course, providers=providers, categories=categories)
 
-    except Exception as e:
+    except ValueError as e:
         return jsonify(error=str(e)), 400
-
 @course_controller.route('/delete/<int:course_id>', methods=['GET,POST'])
 @login_required
 def delete(course_id):

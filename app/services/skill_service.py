@@ -1,5 +1,4 @@
-from ..models.data_model import Skill
-from ..models.db import db
+from ..models.data_model import db, Skill
 
 class SkillService:
 

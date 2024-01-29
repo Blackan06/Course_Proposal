@@ -16,6 +16,7 @@
                 <th>Path</th>
                 <th>Provider Name</th>
                 <th>Category Name</th>
+                <th>Image</th>e
                 <th>Action</th>
             </tr>
         </thead>
@@ -26,8 +27,14 @@
                     <td>{{ course.course_description }}</td>
                     <td>{{ course.course_rate }}</td>
                     <td>{{ course.course_path }}</td>
-                    <td>{{ course.provider.provider_name }}</td>
-                    <td>{{ course.category.category_name }}</td>
+                    <td>{{ course.provider.provider_name | safe }}</td>
+                    <td>{{ course.category.category_name | safe }}</td>
+
+                    <td>  
+                        {% if course.course_image %}
+                            <img src="data:image/png;base64,{{ course.course_image }}" alt="Course Image">
+                        {% endif %}
+                    </td>
                     <td>
                         <a href="{{ url_for('main.course_controller.edit', course_id=course.course_id) }}">Edit</a>
                         <a href="{{ url_for('main.course_controller.delete', course_id=course.course_id) }}" onclick="return confirm('Are you sure you want to delete this course?')">Delete</a>

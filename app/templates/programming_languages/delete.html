@@ -1,0 +1,19 @@
+<!-- templates/programming_languages/delete.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Programming Language</title>
+</head>
+<body>
+    <h1>Delete Programming Language</h1>
+    <p>Are you sure you want to delete the programming language "{{ programming_language.language_name }}"?</p>
+    
+    <form method="POST" action="{{ url_for('main.programming_language_controller.delete', language_id=programming_language.language_id) }}">
+        <button type="submit">Yes, Delete</button>
+    </form>
+    
+    <a href="{{ url_for('main.programming_language_controller.index') }}">No, Cancel</a>
+</body>
+</html>

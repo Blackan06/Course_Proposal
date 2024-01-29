@@ -50,7 +50,6 @@ def create_app():
 
 
     migrate = Migrate(app, db)
-    from app import models
 
     app.register_blueprint(main)
 

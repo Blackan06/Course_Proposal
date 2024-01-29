@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Course</title>
+</head>
+<body>
+    <h1>Edit Course</h1>
+    <form method="POST" action="{{ url_for('main.course_controller.edit', course_id=course.id) }}">
+        <label for="course_name">Course Name:</label>
+        <input type="text" id="course_name" name="course_name" value="{{ course.course_name }}" required>
+
+        <label for="course_description">Description:</label>
+        <textarea id="course_description" name="course_description" required>{{ course.course_description }}</textarea>
+
+        <label for="course_rate">Rate:</label>
+        <input type="number" id="course_rate" name="course_rate" value="{{ course.course_rate }}" required>
+
+        <label for="course_path">Path:</label>
+        <input type="text" id="course_path" name="course_path" value="{{ course.course_path }}" required>
+
+        <label for="provider_id">Provider:</label>
+        <select id="provider_id" name="provider_id" required>
+            {% for provider in providers %}
+                <option value="{{ provider.provider_id }}" {% if provider.id == course.provider_id %}selected{% endif %}>{{ provider.provider_name }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="category_id">Category:</label>
+        <select id="category_id" name="category_id" required>
+            {% for category in categories %}
+                <option value="{{ category.category_id }}" {% if category.id == course.category_id %}selected{% endif %}>{{ category.category_name }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Save Changes</button>
+    </form>
+    <a href="{{ url_for('main.course_controller.index') }}">Back to Course List</a>
+</body>
+</html>

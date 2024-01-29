@@ -1,0 +1,18 @@
+<!-- templates/providers/create.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Provider</title>
+</head>
+<body>
+    <h1>Create Provider</h1>
+    <form method="POST" action="{{ url_for('main.provider_controller.create') }}">
+        <label for="provider_name">Provider Name:</label>
+        <input type="text" id="provider_name" name="provider_name" required>
+        <button type="submit">Create</button>
+    </form>
+    <a href="{{ url_for('main.provider_controller.index') }}">Back to Provider List</a>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Skill</title>
+</head>
+<body>
+    <h1>Delete Skill</h1>
+    <p>Are you sure you want to delete the skill "{{ skill.skill_name }}"?</p>
+    <form action="{{ url_for('main.skill_controller.delete', skill_id=skill.id) }}" method="post">
+        <button type="submit">Confirm Delete</button>
+    </form>
+    <a href="{{ url_for('main.skill_controller.index') }}">Cancel</a>
+</body>
+</html>

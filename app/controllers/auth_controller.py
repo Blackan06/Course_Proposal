@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, redirect,url_for
 from flask_login import login_user, logout_user, login_required
 from ..services.user_service import UserService
 from datetime import timedelta
@@ -19,8 +19,7 @@ def login():
         if user and password == user.password:
             login_user(user)
             print(user.username)
-            return jsonify(message='Logged in successfully'), 200
-
+            return redirect(url_for('main.course_controller.index'))
     return jsonify(message='Invalid credentials'), 401
 
 

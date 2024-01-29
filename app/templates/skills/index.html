@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill List</title>
+</head>
+<body>
+    <h1>Skill List</h1>
+    <ul>
+        {% for skill in skills %}
+            <li>{{ skill.skill_name }}</li>
+            <li>{{ skill.category.category_name }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('main.skill_controller.create') }}">Create New Skill</a>
+</body>
+</html>

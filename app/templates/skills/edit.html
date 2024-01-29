@@ -1,0 +1,27 @@
+<!-- templates/skills/edit.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Skill</title>
+</head>
+<body>
+    <h1>Edit Skill</h1>
+    <form action="{{ url_for('main.skill_controller.edit', skill_id=skill.id) }}" method="post">
+        <label for="new_skill_name">New Skill Name:</label>
+        <input type="text" id="new_skill_name" name="new_skill_name" value="{{ skill.skill_name }}" required>
+        
+        <label for="new_category_id">New Category:</label>
+        <select id="new_category_id" name="new_category_id" required>
+            {% for category in categories %}
+                <option value="{{ category.category_id }}" {% if category.id == skill.category_id %}selected{% endif %}>{{ category.category_name }}</option>
+            {% endfor %}
+        </select>
+        
+        <button type="submit">Save Changes</button>
+    </form>
+    <a href="{{ url_for('main.skill_controller.index') }}">Back to Index</a>
+</body>
+</html>

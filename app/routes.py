@@ -1,8 +1,18 @@
 from flask import Blueprint
 from .controllers.course_controller import course_controller
 from .controllers.auth_controller import auth_controller
+from .controllers.skill_controller import skill_controller
+from .controllers.category_controller import category_controller
+from .controllers.provider_controller import provider_controller
+from .controllers.course_programming_language_controller import course_programming_language_controller
+from .controllers.programming_language_controller import programming_language_controller
 
 main = Blueprint('main', __name__)
 
 main.register_blueprint(auth_controller)
 main.register_blueprint(course_controller)
+main.register_blueprint(skill_controller)
+main.register_blueprint(category_controller)
+main.register_blueprint(provider_controller)
+main.register_blueprint(programming_language_controller)
+main.register_blueprint(course_programming_language_controller)

@@ -1,5 +1,4 @@
-from ..models.data_model import CourseProgrammingLanguage
-from ..models.db import db
+from ..models.data_model import db,CourseProgrammingLanguage
 
 class CourseProgrammingLanguageService:
 

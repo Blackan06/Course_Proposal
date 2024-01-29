@@ -1,5 +1,4 @@
-from ..models.data_model import ProgrammingLanguage
-from ..models.db import db
+from ..models.data_model import db,ProgrammingLanguage
 
 class ProgrammingLanguageService:
 

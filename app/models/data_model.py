@@ -1,5 +1,8 @@
-from ..models.db import db
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import LargeBinary
 
+
+db = SQLAlchemy()
 class Category(db.Model):
     __tablename__ = 'category'
     category_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -20,6 +23,7 @@ class Course(db.Model):
     course_description = db.Column(db.String(255), unique=True, nullable=True)
     course_rate = db.Column(db.Integer,unique=False, nullable=True)
     course_path = db.Column(db.String(255),unique=True , nullable=False)
+    course_image = db.Column(LargeBinary, nullable=True)
     provider_id = db.Column(db.Integer, db.ForeignKey('provider.provider_id', ondelete='CASCADE'), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('category.category_id', ondelete='CASCADE'), nullable=False)
     course_programming_languages = db.relationship('CourseProgrammingLanguage', backref='course', lazy=True)

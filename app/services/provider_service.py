@@ -1,5 +1,4 @@
-from ..models.data_model import Provider
-from ..models.db import db
+from ..models.data_model import db, Provider
 
 class ProviderService:
 

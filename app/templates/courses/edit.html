@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Edit Course</h1>
-    <form method="POST" action="{{ url_for('main.course_controller.edit', course_id=course.id) }}"  enctype="multipart/form-data">
+    <form method="POST" action="{{ url_for('main.course_controller.edit', course_id=course.course_id) }}"  enctype="multipart/form-data">
         <label for="course_name">Course Name:</label>
         <input type="text" id="course_name" name="course_name" value="{{ course.course_name }}" required>
 

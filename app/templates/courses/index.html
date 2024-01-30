@@ -182,15 +182,19 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <div>
+                            <form method="POST" action="{{ url_for('main.course_controller.search') }}">
                             <div class="input-group">
+
                                 <input type="text" class="form-control bg-light border-1 small"
-                                    placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                                    placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2"
+                                    id="coursename" name="coursename">
                                 <div class="input-group-append">
-                                    <button class="btn btn-primary" type="button">
+                                    <button class="btn btn-primary" type="submit">
                                         <i class="fas fa-search fa-sm"></i>
                                     </button>
                                 </div>
                             </div>
+                            </form>
                         </div>
                         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                                 class="fas fa-upload fa-sm text-white-50"></i> Import file</a>

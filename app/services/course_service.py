@@ -1,94 +1,176 @@
-from ..services.category_service import CategoryService
+from flask import Blueprint, render_template, redirect, url_for, request, jsonify
+from ..models.data_model import Course
+from ..services.course_service import CourseService
 from ..services.provider_service import ProviderService
-from ..models.data_model import db,Course
-from PIL import Image
-from io import BytesIO
-import base64
+from ..services.category_service import CategoryService
+from flask_login import login_required
+course_controller = Blueprint('course_controller', __name__, url_prefix='/course')
 
-class CourseService:
-    @staticmethod
-    def get_all_courses():
-        return Course.query.all()
-    @staticmethod
-    def get_course_by_id(courseId):
-        return Course.query.get(courseId)
-    @staticmethod
-    def convert_image_to_base64(image_data):
-        if image_data:
-            base64_image = base64.b64encode(image_data).decode('utf-8')
-            return base64_image
-        return None
-    @staticmethod
-    def create_course(course_name, course_description, course_rate, course_path, provider_id, category_id, course_image):
-        provider = ProviderService.get_provider_by_id(provider_id)
-        category = CategoryService.get_category_by_id(category_id)
+@course_controller.route('/', methods=['GET'])
+@course_controller.route('/index', methods=['GET'])
+@login_required
+def index():
+    courses = CourseService.get_all_courses()
+    courses_with_base64_images = [
+        {
+            'course_id': course.course_id,
+            'course_name': course.course_name,
+            'course_description': course.course_description,
+            'course_rate': course.course_rate,
+            'course_path': course.course_path,         
+            'provider': course.provider,  
+            'category': course.category,
+            'course_image': CourseService.convert_image_to_base64(course.course_image),
+        }
+        for course in courses
+    ]
+    return render_template('courses/index.html', courses=courses_with_base64_images)
 
-        if not provider or not category:
-            raise ValueError("Invalid provider_id or category_id")
+@course_controller.route('/create', methods=['GET', 'POST'])
+@login_required
+def create():
+    try:
+        if request.method == 'POST':
+            course_name = request.form['course_name']
+            course_description = request.form['course_description']
+            course_rate = request.form['course_rate']
+            course_path = request.form['course_path']
+            provider_id = request.form['provider_id']
+            category_id = request.form['category_id']
+            course_image = request.files['course_image']
+            CourseService.create_course(
+                course_name,
+                course_description,
+                course_rate,
+                course_path,
+                provider_id,
+                category_id,
+                course_image
+            )
+            return redirect(url_for('main.course_controller.index'))
+        else:
+            providers = ProviderService.get_all_provider()
+            categories = CategoryService.get_all_category()
+            return render_template('courses/create.html', providers=providers, categories=categories)
 
-        # Convert image to binary data
-        course_image_binary = None
-        if course_image:
-            image_stream = BytesIO(course_image.read())
-            img = Image.open(image_stream)
-            course_image_binary = image_stream.getvalue()
+    except ValueError as e:
+        return jsonify(error=str(e)), 400
 
-        new_course = Course(
-            course_name=course_name,
-            course_description=course_description,
-            course_rate=course_rate,
-            course_path=course_path,
-            provider_id=provider_id,
-            category_id=category_id,
-            course_image=course_image_binary
-        )
-
-        db.session.add(new_course)
-        db.session.commit()
-        return new_course
-
-    @staticmethod
-    def edit_course(course_id, new_course_name, new_course_description, new_course_rate, new_course_path, new_provider_id, new_category_id, new_course_image):
+@course_controller.route('/edit/<int:course_id>', methods=['GET', 'POST'])
+@login_required
+def edit(course_id):
+    try:
         course = Course.query.get(course_id)
-        if course:
-            course.course_name = new_course_name
-            course.course_description = new_course_description
-            course.course_path = new_course_path
-            course.course_rate = new_course_rate
-            course.provider_id = new_provider_id
-            course.category_id = new_category_id
 
-            # Update image if provided
-            if new_course_image:
-                image_stream = BytesIO(new_course_image.read())
-                img = Image.open(image_stream)
-                course.course_image = image_stream.getvalue()
+        if not course:
+            # Handle the case where the course with the given ID doesn't exist.
+            return jsonify(error=f"Course with ID {course_id} not found"), 404
 
-            db.session.commit()
-            return course
-        return None
+        if request.method == 'POST':
+            new_course_name = request.form['course_name']
+            new_course_description = request.form['course_description']
+            new_course_rate = request.form['course_rate']
+            new_course_path = request.form['course_path']
+            new_provider_id = request.form['provider_id']
+            new_category_id = request.form['category_id']
+            new_course_image = request.files['course_image']
+            CourseService.edit_course(
+                course_id,
+                new_course_name,
+                new_course_description,
+                new_course_rate,
+                new_course_path,
+                new_provider_id,
+                new_category_id,
+                new_course_image
+            )
+            return redirect(url_for('main.course_controller.index'))
+        else:
+            providers = ProviderService.get_all_provider()
+            categories = CategoryService.get_all_category()
+            return render_template('courses/edit.html', course=course, providers=providers, categories=categories)
 
-    @staticmethod
-    def delete_course(course_id):
-        course = Course.query.get(course_id)
-        if course:
-            db.session.delete(course)
-            db.session.commit()
-            return True
-        return False
+    except ValueError as e:
+        return jsonify(error=str(e)), 400
     
-    @staticmethod
-    def search_course_by_name(input_name):
-        courses = Course.query.filter(Course.course_name.ilike(f"%{input_name}%")).all()
-        return courses
+@course_controller.route('/delete/<int:course_id>', methods=['GET,POST'])
+@login_required
+def delete(course_id):
+    try:
+        success = CourseService.delete_course(course_id)
+        if success:
+            return redirect(url_for('course_controller.index'))
+    except Exception as e:
+        return jsonify(error=str(e)), 400
     
-    @staticmethod
-    def filter_courses(category=None, provider=None):
-        courses = Course.query
-        if category != 'all':
-            courses = courses.filter(Course.category_id == category)
-        if provider != 'all':
-            courses = courses.filter_by(provider_id = provider)
-        courses = courses.all()
-        return courses
 
+
+@course_controller.route('/search', methods=['POST'])
+def search():
+        input_name = request.form['coursename']
+
+        courses = CourseService.search_course_by_name(input_name)
+
+        courses_with_base64_images = [
+        {
+             'course_id': course.course_id,
+            'course_name': course.course_name,
+            'course_description': course.course_description,
+            'course_rate': course.course_rate,
+            'course_path': course.course_path,         
+            'provider': course.provider,  
+            'category': course.category,
+            'course_image': CourseService.convert_image_to_base64(course.course_image),
+        }
+        for course in courses
+        ]
+        return render_template('courses/index.html', courses=courses_with_base64_images)
+
+@course_controller.route('/get_course_attribute', methods=['GET'])
+def get_course_attribute():
+        
+        courses = CourseService.get_all_courses()
+        
+        courses_with_base64_images = [
+        {
+            'course_id': course.course_id,
+            'course_name': course.course_name,
+            'course_description': course.course_description,
+            'course_rate': course.course_rate,
+            'course_path': course.course_path,         
+            'provider': course.provider,  
+            'category': course.category,
+            'course_image': CourseService.convert_image_to_base64(course.course_image),
+        }
+        for course in courses
+        ]
+
+        providers = ProviderService.get_all_provider()
+        categories = CategoryService.get_all_category()
+
+        return render_template('courses/index.html', providers=providers, categories=categories, courses=courses_with_base64_images)
+
+@course_controller.route('/filter', methods=['GET','POST'])
+def filter():
+        category = request.form['categories']
+        provider = request.form['providers']
+        print(category)
+        courses = CourseService.filter_courses(category=category, provider=provider)
+
+        courses_with_base64_images = [
+            {
+                'course_name': course.course_name,
+                'course_description': course.course_description,
+                'course_rate': course.course_rate,
+                'course_path': course.course_path,         
+                'provider': course.provider,  
+                'category': course.category,
+                'course_image': CourseService.convert_image_to_base64(course.course_image),
+            }
+            for course in courses
+        ]
+
+        providers = ProviderService.get_all_provider()
+        categories = CategoryService.get_all_category()
+
+        return render_template('courses/index.html', courses=courses_with_base64_images, providers=providers, categories=categories)

@@ -32,7 +32,7 @@ def search():
 
         courses = CourseService.search_course_by_name(input_name)
 
-        print(courses)
+        # print('courses is here')
 
         courses_with_base64_images = [
         {
@@ -57,7 +57,6 @@ def get_course_attribute():
         
         courses_with_base64_images = [
         {
-            'course_id': course.course_id,
             'course_name': course.course_name,
             'course_description': course.course_description,
             'course_rate': course.course_rate,
@@ -71,21 +70,6 @@ def get_course_attribute():
 
         providers = ProviderService.get_all_provider()
         categories = CategoryService.get_all_category()
-
-        # courses_with_base64_images = [
-        # {
-        #     'course_id': course.course_id,
-        #     'course_name': course.course_name,
-        #     'course_description': course.course_description,
-        #     'course_rate': course.course_rate,
-        #     'course_path': course.course_path,         
-        #     'provider': course.provider,  
-        #     'category': course.category,
-        #     'course_image': CourseService.convert_image_to_base64(course.course_image),
-        # }
-        # for course in courses
-        # ]
-        # return render_template('users/proposal.html', providers=providers, categories=categories, courses=courses_with_base64_images)
         return render_template('user_site/index.html', providers=providers, categories=categories, courses=courses_with_base64_images)
 
 @user_controller.route('/filter', methods=['GET','POST'])

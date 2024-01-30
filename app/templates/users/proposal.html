@@ -10,11 +10,19 @@
     <form method="POST" action="{{ url_for('main.user_controller.filter') }}">
         <label for="categories">Choose a category:</label>
         <select id="categories" name="categories">
-            <option value="">All</option>
+            <option value="all">All</option>
             {% for category in categories %}
-            <option value="{{ category.category_id }}">{{ category.category_name }}</option><br>
+                <option value="{{ category.category_id }}">{{ category.category_name }}</option><br>
             {% endfor %}
-        </select>
+        </select> <br>
+
+        <label for="providers">Choose a provider:</label>
+        <select id="providers" name="providers">
+            <option value="all">All</option>
+            {% for provider in providers %}
+                <option value="{{ provider.provider_id }}">{{ provider.provider_name }}</option><br>
+            {% endfor %}
+        </select><br>
         
         <button type="submit">Search</button>
     </form>
@@ -34,10 +42,10 @@
         <tbody>
             {% for course in courses %}
                 <tr>
-                    <td><strong>{{ course.course_name }}</strong></td>
-                    <td>{{ course.course_description }}</td>
-                    <td>{{ course.course_rate }}</td>
-                    <td>{{ course.course_path }}</td>
+                    <td><strong>{{ course.course_name | safe }}</strong></td>
+                    <td>{{ course.course_description | safe }}</td>
+                    <td>{{ course.course_rate | safe}}</td>
+                    <td>{{ course.course_path | safe }}</td>
                     <td>{{ course.provider.provider_name | safe }}</td>
                     <td>{{ course.category.category_name | safe }}</td>
 

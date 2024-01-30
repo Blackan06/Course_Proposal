@@ -84,24 +84,11 @@ class CourseService:
     
     @staticmethod
     def filter_courses(category=None, provider=None):
-        query = Course.query
-        if category:
-            courses = query.filter_by(category_id = category).all()
-        # if provider:
-        #     query = query.filter_by(provider_id = provider)
-        # courses = query.all()
-        courses_with_base64_images = [
-            {
-                'course_id': course.course_id,
-                'course_name': course.course_name,
-                'course_description': course.course_description,
-                'course_rate': course.course_rate,
-                'course_path': course.course_path,         
-                'provider': course.provider,  
-                'category': course.category,
-                'course_image': CourseService.convert_image_to_base64(course.course_image),
-            }
-            for course in courses
-        ]
-        return courses_with_base64_images
+        courses = Course.query
+        if category != 'all':
+            courses = courses.filter(Course.category_id == category)
+        if provider != 'all':
+            courses = courses.filter_by(provider_id = provider)
+        courses = courses.all()
+        return courses
 

@@ -12,7 +12,8 @@
     <title>Recomendation Course</title>
 
     <!-- Custom fonts for this template-->
-    <link href="{{url_for('static', filename='vendor/fontawesome-free/css/all.min.css' )}}" rel="stylesheet" type="text/css">
+    <link href="{{url_for('static', filename='vendor/fontawesome-free/css/all.min.css' )}}" rel="stylesheet"
+        type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
@@ -46,6 +47,18 @@
                 <a class="nav-link" href="{{ url_for('main.course_controller.index') }}">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Courses</span></a>
+                <a class="nav-link" href="{{ url_for('main.course_controller.create') }}">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Add Course</span></a>
+                <a class="nav-link" href="{{ url_for('main.category_controller.create') }}">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Add Category</span></a>
+                <a class="nav-link" href="{{ url_for('main.programming_language_controller.create') }}">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Add Programing Language</span></a>
+                <a class="nav-link" href="{{ url_for('main.provider_controller.create') }}">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Add Provider</span></a>
             </li>
 
             <!-- Divider -->
@@ -120,7 +133,7 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
                                 <img class="img-profile rounded-circle"
-                                    src="{{url_for('static', filename='images/undraw_profile.svg')}}">
+                                    src="img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -146,15 +159,15 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Course</h1>
-                        <a href="{{ url_for('main.course_controller.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"> Add Course</a>
+                        <a href="{{ url_for('main.course_controller.create') }}"
+                            class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"> Add Course</a>
                     </div>
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <div>
                             <div class="input-group">
                                 <input type="text" class="form-control bg-light border-1 small"
-                                    placeholder="Search for..." aria-label="Search"
-                                    aria-describedby="basic-addon2">
+                                    placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
                                 <div class="input-group-append">
                                     <button class="btn btn-primary" type="button">
                                         <i class="fas fa-search fa-sm"></i>
@@ -163,10 +176,10 @@
                             </div>
                         </div>
                         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                            class="fas fa-upload fa-sm text-white-50"></i> Import file</a>
+                                class="fas fa-upload fa-sm text-white-50"></i> Import file</a>
                     </div>
 
-                    
+
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -197,17 +210,21 @@
                                             <td>{{ course.course_path }}</td>
                                             <td>{{ course.provider.provider_name | safe }}</td>
                                             <td>{{ course.category.category_name | safe }}</td>
-                                            <td>  
+                                            <td>
                                                 {% if course.course_image %}
-                                                    <img src="data:image/png;base64,{{ course.course_image }}" width="50%" alt="Course Image">
+                                                    <img src="data:image/png;base64,{{ course.course_image }}" alt="Course Image">
                                                 {% endif %}
                                             </td>
                                             <td>
-                                                <a href="{{ url_for('main.course_controller.edit', course_id=course.course_id) }}"><i class="far fa-edit"></i></i></a>
-                                                <a href="{{ url_for('main.course_controller.delete' , course_id=course.course_id) }}"><i class="fas fa-trash-alt"></i></a>
+                                                <a
+                                                    href="{{ url_for('main.course_controller.edit', course_id=course.course_id) }}"><i
+                                                        class="far fa-edit"></i></i></a>
+                                                <a
+                                                    href="{{ url_for('main.course_controller.delete' , course_id=course.course_id) }}"><i
+                                                        class="fas fa-trash-alt"></i></a>
                                             </td>
                                         </tr>
-                                        
+
                                         {% endfor %}
                                     </tbody>
                                 </table>
@@ -261,6 +278,8 @@
             </div>
         </div>
     </div>
+
+
 
     <!-- Bootstrap core JavaScript-->
     <script src="{{url_for('static', filename='vendor/jquery/jquery.min.js')}}"></script>

@@ -9,7 +9,7 @@
     <h1>Delete Course</h1>
     <p>Are you sure you want to delete the course "{{ course.course_name }}"?</p>
     
-    <form method="POST" action="{{ url_for('main.course_controller.delete', course_id=course.id) }}">
+    <form method="POST" action="{{ url_for('main.course_controller.delete', course_id=course.course_id) }}">
         <button type="submit">Yes, Delete</button>
     </form>
     

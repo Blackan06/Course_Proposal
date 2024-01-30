@@ -46,8 +46,6 @@ def create_app():
             return User(user_id=username, username=username, password=password)
 
         return None
-        
-
 
     migrate = Migrate(app, db)
 

@@ -1,8 +1,8 @@
-"""Initial migration
+"""empty message
 
-Revision ID: 5df9420dc3d9
+Revision ID: 5e755c5cbb4d
 Revises: 
-Create Date: 2024-01-27 12:16:30.183091
+Create Date: 2024-01-30 13:41:05.785652
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '5df9420dc3d9'
+revision = '5e755c5cbb4d'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -35,25 +35,13 @@ def upgrade():
     sa.Column('provider_name', sa.String(length=255), nullable=False),
     sa.PrimaryKeyConstraint('provider_id')
     )
-    op.create_table('users',
-    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('username', sa.String(length=50), nullable=False),
-    sa.Column('name', sa.String(length=255), nullable=False),
-    sa.Column('email', sa.String(length=255), nullable=False),
-    sa.Column('phone', sa.String(length=255), nullable=False),
-    sa.Column('address', sa.String(length=255), nullable=False),
-    sa.Column('password_hash', sa.String(length=255), nullable=False),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('email'),
-    sa.UniqueConstraint('phone'),
-    sa.UniqueConstraint('username')
-    )
     op.create_table('course',
     sa.Column('course_id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('course_name', sa.String(length=255), nullable=False),
     sa.Column('course_description', sa.String(length=255), nullable=True),
     sa.Column('course_rate', sa.Integer(), nullable=True),
     sa.Column('course_path', sa.String(length=255), nullable=False),
+    sa.Column('course_image', sa.LargeBinary(), nullable=True),
     sa.Column('provider_id', sa.Integer(), nullable=False),
     sa.Column('category_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['category_id'], ['category.category_id'], ondelete='CASCADE'),
@@ -86,7 +74,6 @@ def downgrade():
     op.drop_table('course_programming_language')
     op.drop_table('skill')
     op.drop_table('course')
-    op.drop_table('users')
     op.drop_table('provider')
     op.drop_table('programming_language')
     op.drop_table('category')

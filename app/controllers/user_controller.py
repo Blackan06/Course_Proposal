@@ -3,6 +3,7 @@ from ..models.data_model import Course
 from ..services.course_service import CourseService
 from ..services.provider_service import ProviderService
 from ..services.category_service import CategoryService
+from ..services.programming_language_service import ProgrammingLanguageService
 from ..services.user_service import UserService
 user_controller = Blueprint('user_controller', __name__, url_prefix='/user')
 
@@ -23,14 +24,25 @@ def index():
         }
         for course in courses
     ]
+    providers = ProviderService.get_all_provider()
+    categories = CategoryService.get_all_category()
+    programing_languages = ProgrammingLanguageService.get_all_programming_language()
+    print(categories)
     #return render_template('users/index.html', courses=courses_with_base64_images)
-    return render_template('user_site/index.html', courses=courses_with_base64_images)
+    return render_template('user_site/index.html', courses=courses_with_base64_images, providers=providers, categories=categories, 
+                                                    programing_languages=programing_languages)
 
 @user_controller.route('/search', methods=['POST'])
 def search():
         input_name = request.form['coursename']
+        category = request.form['categories']
+        provider = request.form['providers']
+        programing_language = request.form['programing_languages']
 
-        courses = CourseService.search_course_by_name(input_name)
+        print("category", category)
+        print("Provider", provider)
+
+        courses = CourseService.search_course_by_name(input_name=input_name, category=category, provider=provider, programming_language=programing_language)
 
         # print('courses is here')
 

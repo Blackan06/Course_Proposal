@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask , render_template , url_for
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 import os
@@ -10,7 +10,7 @@ from .models.data_model import db
 from flask_migrate import Migrate
 from functools import wraps
 from flask_pymongo import PyMongo
-
+from flask_bootstrap import Bootstrap
 
 
 def create_app():
@@ -31,7 +31,7 @@ def create_app():
     # Cấu hình SQLAlchemy cho models
     db.init_app(app)
 
-    
+    bootstrap = Bootstrap(app)
     
     @login_manager.user_loader
     def load_user(user_id):
@@ -53,6 +53,15 @@ def create_app():
 
     app.register_blueprint(main)
 
-    
+    @app.route('/')
+    @app.route('/index')
+    def index():
+        # Sample data for the cards
+        cards_data = [
+            {'image_src': url_for('static', filename='images/coursera-logo.png'), 'text': 'Card 1 text'},
+            {'image_src': url_for('static', filename='images/Udemy_logo.svg.png'), 'text': 'Card 2 text'},
+            # Add more card data as needed
+        ]
+        return render_template('index.html', cards=cards_data)
 
     return app

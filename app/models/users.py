@@ -1,5 +1,5 @@
 from werkzeug.security import generate_password_hash, check_password_hash
-from ..models.db import db
+from .mongodb_model import db
 
 class User(db.Model):
     __tablename__ = 'users' 

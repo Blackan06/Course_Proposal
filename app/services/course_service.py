@@ -1,6 +1,9 @@
 from ..services.category_service import CategoryService
 from ..services.provider_service import ProviderService
+from ..services.course_programming_language_service import CourseProgrammingLanguageService
 from ..models.data_model import db,Course
+from ..models.data_model import db,CourseProgrammingLanguage
+from ..models.data_model import db,ProgrammingLanguage
 from PIL import Image
 from io import BytesIO
 import base64
@@ -78,8 +81,21 @@ class CourseService:
         return False
     
     @staticmethod
-    def search_course_by_name(input_name):
-        courses = Course.query.filter(Course.course_name.ilike(f"%{input_name}%")).all()
+    def search_course_by_name(category, provider, programming_language, input_name=None):
+        courses = Course.query
+        if input_name:
+            courses = courses.filter(Course.course_name.ilike(f"%{input_name}%"))
+        if category != 'all':
+            courses = courses.filter(Course.category_id == category)
+        if provider != 'all':
+            courses = courses.filter(Course.provider_id == provider)
+        if programming_language != 'all':
+            courses = (
+            courses.join(CourseProgrammingLanguage)
+            .filter(CourseProgrammingLanguage.language_id == programming_language)
+        )
+            
+        courses = courses.all()
         return courses
 
     @staticmethod

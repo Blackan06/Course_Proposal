@@ -23,7 +23,8 @@ def index():
         }
         for course in courses
     ]
-    return render_template('users/index.html', courses=courses_with_base64_images)
+    #return render_template('users/index.html', courses=courses_with_base64_images)
+    return render_template('user_site/index.html', courses=courses_with_base64_images)
 
 @user_controller.route('/search', methods=['POST'])
 def search():
@@ -35,6 +36,7 @@ def search():
 
         courses_with_base64_images = [
         {
+            'course_id': course.course_id,
             'course_name': course.course_name,
             'course_description': course.course_description,
             'course_rate': course.course_rate,
@@ -45,7 +47,8 @@ def search():
         }
         for course in courses
         ]
-        return render_template('users/index.html', courses=courses_with_base64_images)
+        # return render_template('users/index.html', courses=courses_with_base64_images)
+        return render_template('user_site/result.html', courses=courses_with_base64_images)
 
 @user_controller.route('/get_course_attribute', methods=['GET'])
 def get_course_attribute():
@@ -82,7 +85,8 @@ def get_course_attribute():
         # }
         # for course in courses
         # ]
-        return render_template('users/proposal.html', providers=providers, categories=categories, courses=courses_with_base64_images)
+        # return render_template('users/proposal.html', providers=providers, categories=categories, courses=courses_with_base64_images)
+        return render_template('user_site/index.html', providers=providers, categories=categories, courses=courses_with_base64_images)
 
 @user_controller.route('/filter', methods=['GET','POST'])
 def filter():
@@ -109,5 +113,19 @@ def filter():
 
         return render_template('users/proposal.html', courses=courses_with_base64_images, providers=providers, categories=categories)
     
+@user_controller.route('/get_course/<int:course_id>', methods=['GET'])
+def get_course(course_id):
+    try:
+        course = Course.query.get(course_id)
 
+        if not course:
+            # Handle the case where the course with the given ID doesn't exist.
+            return jsonify(error=f"Course with ID {course_id} not found"), 404
+
+        providers = ProviderService.get_all_provider()
+        categories = CategoryService.get_all_category()
+        return render_template('user_site/course_detail.html', course=course, providers=providers, categories=categories)
+
+    except ValueError as e:
+        return jsonify(error=str(e)), 400
 

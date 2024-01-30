@@ -11,6 +11,21 @@
         <label for="coursename">Search for course:</label>
         <input type="text" id="coursename" name="coursename" required>
         <br>
+        <label for="categories">Choose a category:</label>
+        <select id="categories" name="categories">
+            <option value="all">All</option>
+            {% for category in categories %}
+                <option value="{{ category.category_id }}">{{ category.category_name }}</option><br>
+            {% endfor %}
+        </select> <br>
+
+        <label for="providers">Choose a provider:</label>
+        <select id="providers" name="providers">
+            <option value="all">All</option>
+            {% for provider in providers %}
+                <option value="{{ provider.provider_id }}">{{ provider.provider_name }}</option><br>
+            {% endfor %}
+        </select><br>
         <button type="submit">Search</button>
     </form>
 

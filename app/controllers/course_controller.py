@@ -92,6 +92,7 @@ def edit(course_id):
 
     except ValueError as e:
         return jsonify(error=str(e)), 400
+    
 @course_controller.route('/delete/<int:course_id>', methods=['GET,POST'])
 @login_required
 def delete(course_id):

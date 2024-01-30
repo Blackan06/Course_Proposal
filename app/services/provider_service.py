@@ -25,6 +25,7 @@ class ProviderService:
             db.session.commit()
             return provider
         return None
+    
     @staticmethod
     def delete_provider(provider_id):
         provider = Provider.query.get(provider_id)

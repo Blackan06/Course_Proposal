@@ -76,3 +76,19 @@ class CourseService:
             db.session.commit()
             return True
         return False
+    
+    @staticmethod
+    def search_course_by_name(input_name):
+        courses = Course.query.filter(Course.course_name.ilike(f"%{input_name}%")).all()
+        return courses
+    
+    @staticmethod
+    def filter_courses(category=None, provider=None):
+        courses = Course.query
+        if category != 'all':
+            courses = courses.filter(Course.category_id == category)
+        if provider != 'all':
+            courses = courses.filter_by(provider_id = provider)
+        courses = courses.all()
+        return courses
+

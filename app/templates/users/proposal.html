@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>List of Courses</h1>
+    <form method="POST" action="{{ url_for('main.user_controller.filter') }}">
+        <label for="categories">Choose a category:</label>
+        <select id="categories" name="categories">
+            <option value="all">All</option>
+            {% for category in categories %}
+                <option value="{{ category.category_id }}">{{ category.category_name }}</option><br>
+            {% endfor %}
+        </select> <br>
+
+        <label for="providers">Choose a provider:</label>
+        <select id="providers" name="providers">
+            <option value="all">All</option>
+            {% for provider in providers %}
+                <option value="{{ provider.provider_id }}">{{ provider.provider_name }}</option><br>
+            {% endfor %}
+        </select><br>
+        
+        <button type="submit">Search</button>
+    </form>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Course Name</th>
+                <th>Description</th>
+                <th>Rate</th>
+                <th>Path</th>
+                <th>Provider Name</th>
+                <th>Category Name</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in courses %}
+                <tr>
+                    <td><strong>{{ course.course_name | safe }}</strong></td>
+                    <td>{{ course.course_description | safe }}</td>
+                    <td>{{ course.course_rate | safe}}</td>
+                    <td>{{ course.course_path | safe }}</td>
+                    <td>{{ course.provider.provider_name | safe }}</td>
+                    <td>{{ course.category.category_name | safe }}</td>
+
+                    <td>  
+                        {% if course.course_image %}
+                            <img src="data:image/png;base64,{{ course.course_image }}" alt="Course Image">
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

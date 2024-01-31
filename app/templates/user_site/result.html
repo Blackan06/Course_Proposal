@@ -80,12 +80,19 @@
 													<option value="{{ provider.provider_id }}">{{ provider.provider_name }}</option>
 													{% endfor %}
 												</select>
-												<select id="programing_languages" name="programing_languages" type="button"
+												<select id="programming_languages" name="programming_languages" type="button"
 													class="btn btn-default dropdown-toggle">
 													<option value="all">All</option>
-													{% for programing_language in programing_languages %}
-													<option value="{{ programing_language.language_id }}">{{ programing_language.language_name }}</option>
+													{% for programming_language in programming_languages %}
+													<option value="{{ programming_language.language_id }}">{{ programming_language.language_name }}</option>
 													{% endfor %}
+												</select>
+												<select id="rating" name="rating" type="button"
+													class="btn btn-default dropdown-toggle">
+													<option value="5">From 5 star</option>
+													<option value="4">From 4 star</option>
+													<option value="3">From 3 star</option>
+													<option value="2">From 2 star</option>
 												</select>
 											</div>
 											<div class="bor17 of-hidden pos-relative">

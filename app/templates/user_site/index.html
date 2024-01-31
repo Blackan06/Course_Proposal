@@ -87,31 +87,31 @@
 				<form method="POST" action="{{ url_for('main.user_controller.search') }}">
 					<div class="input-group">
 						<div class="input-group-btn search-panel">
-							<select id="categories" name="categories" type="button"
+							<select id="all" name="categories" type="button"
 								class="btn btn-default dropdown-toggle">
-								<option value="Category">Category</option>
+								<option value="all">Category</option>
 								{% for category in categories %}
 									<option value="{{ category.category_id }}">{{ category.category_name }}</option>
 								{% endfor %}
 							</select>
-							<select id="providers" name="providers" type="button"
+							<!-- <select id="providers" name="providers" type="button"
 								class="btn btn-default dropdown-toggle">
-								<option value="Provider">Provider</option>
+								<option value="all">Provider</option>
 								{% for provider in providers %}
 									<option value="{{ provider.provider_id }}">{{ provider.provider_name }}</option>
 								{% endfor %}
 							</select>
 							<select id="programming_languages" name="programming_languages" type="button"
 								class="btn btn-default dropdown-toggle">
-								<option value="Programming Language">Programming Language</option>
+								<option value="all">Programming Language</option>
 								{% for programming_language in programming_languages %}
 									<option value="{{ programming_language.language_id }}">{{ programming_language.language_name }}</option>
 								{% endfor %}
-							</select>  
+							</select>   -->
 						</div>
 						<div class="bor17 of-hidden pos-relative">
 							<input class="stext-103 cl2 plh4 size-116 p-l-28 p-r-55" type="text" placeholder="Search"
-								id="coursename" name="coursename">
+								id="coursename" name="coursename" required>
 
 							<button type="submit" class="flex-c-m size-122 ab-t-r fs-18 cl4 hov-cl1 trans-04">
 								<i class="zmdi zmdi-search"></i>
@@ -234,41 +234,48 @@
 				<div class="row isotope-grid mt-5">
 					{% for course in courses %}
 					<div class="col-6 p-b-35 isotope-item women">
-						<div class="card mb-4">
-							<div class="row no-gutters">
-								<div class="col-md-4">
-									{% if course.course_image %}
-									<img class="img-fluid" src="data:image/png;base64,{{ course.course_image }}"
-										alt="...">
-									{% else %}
-									<img class="img-fluid"
-										src="{{ url_for('static', filename='images/product-01.jpg')}}" alt="...">
-									{% endif %}
-								</div>
-								<div class="col-md-8">
-									<div class="card-body">
-										<h5 class="card-title">{{ course.course_name | safe }}</h5>
-										<p class="card-text">{{ course.course_description | safe }}</p>
-										<hr>
-										<p> {{ course.course_rate | safe }}
-											{% for i in range(1, 6) %}
-											{% if i <= course.course_rate %} <span class="fa fa-star checked"></span>
-												{% else %}
-												<span class="fa fa-star"></span>
-												{% endif %}
+						<a href="{{ url_for('main.user_controller.get_course', course_id=course.course_id) }}"
+							class="text-dark">
+							<div class="card mb-4">
+								<div class="row no-gutters">
+									<div class="col-md-4">
+										{% if course.course_image %}
+										<img class="img-fluid" src="data:image/png;base64,{{ course.course_image }}"
+											alt="...">
+										{% else %}
+										<img class="img-fluid"
+											src="{{ url_for('static', filename='images/product-01.jpg')}}" alt="...">
+										{% endif %}
+									</div>
+									<div class="col-md-8">
+										<div class="card-body">
+											<h5 class="card-title">{{ course.course_name | safe }}</h5>
+											<p class="card-text">{{ course.course_description | safe }}</p>
+											<hr>
+											<p> {{ course.course_rate | safe }}
+												{% for i in range(1, 6) %}
+													{% if i <= course.course_rate %} 
+													<span class="fa fa-star checked"></span>
+													{% else %}
+														<span class="fa fa-star"></span>
+													{% endif %}
 												{% endfor %}
-										</p>
-										<p>Skills will learn: 
-											{% for skill in course.category.skills %}
-												<div style="display: inline-block;">{{ skill.skill_name }}</div>
-											{% endfor %}
-										</p>										
-										<p>Provider: {{ course.provider.provider_name | safe }}</p>
+											</p>
+											<p>Skills will learn: 
+												{% for skill in course.category.skills %}
+													<span >
+														{{ skill.skill_name }}
+													</span>
+												{% endfor %}
+											</p>
+											<p>Provider: {{ course.provider.provider_name | safe }}</p>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
+						</a>
 					</div>
+
 					{% endfor %}
 				</div>
 			</div>

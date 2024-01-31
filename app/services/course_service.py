@@ -42,6 +42,7 @@ class CourseService:
             course_path=course_path,
             provider_id=provider_id,
             category_id=category_id,
+            
             course_image=course_image_binary
         )
 
@@ -53,7 +54,8 @@ class CourseService:
                 course_id=new_course.course_id,
                 language_id=language.language_id
             )
-            CourseProgrammingLanguageService.create_course_programming_language(new_course_programming_language)
+
+            db.session.add(new_course_programming_language)
         
 
         db.session.commit()
@@ -115,19 +117,20 @@ class CourseService:
         return False
     
     @staticmethod
-    def search_course_by_name(category, provider, programming_language, input_name=None):
+    #def search_course_by_name(category, provider, programming_language, input_name=None):
+    def search_course_by_name(category, input_name=None):
         courses = Course.query
         if input_name:
             courses = courses.filter(Course.course_name.ilike(f"%{input_name}%"))
         if category != 'all':
             courses = courses.filter(Course.category_id == category)
-        if provider != 'all':
-            courses = courses.filter(Course.provider_id == provider)
-        if programming_language != 'all':
-            courses = (
-            courses.join(CourseProgrammingLanguage)
-            .filter(CourseProgrammingLanguage.language_id == programming_language)
-        )
+        # if provider != 'all':
+        #     courses = courses.filter(Course.provider_id == provider)
+        # if programming_language != 'all':
+        #     courses = (
+        #     courses.join(CourseProgrammingLanguage)
+        #     .filter(CourseProgrammingLanguage.language_id == programming_language)
+        # )
             
         courses = courses.all()
         return courses

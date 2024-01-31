@@ -1,8 +1,8 @@
-"""empty message
+"""Add course_link_image to Course
 
-Revision ID: 7999c51a9165
+Revision ID: a14934c95bf7
 Revises: 
-Create Date: 2024-01-29 23:21:35.654708
+Create Date: 2024-01-31 08:45:03.950798
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '7999c51a9165'
+revision = 'a14934c95bf7'
 down_revision = None
 branch_labels = None
 depends_on = None

@@ -29,24 +29,23 @@ def create():
 @login_required
 def edit(language_id):
     try:
+        programming_language = ProgrammingLanguage.query.get(language_id)
         if request.method == 'POST':
 
-            programming_language = ProgrammingLanguage.query.get(language_id)
             new_language_name = request.form['language_name']
             ProgrammingLanguageService.edit_programming_language(language_id, new_language_name)
             return redirect(url_for('main.programming_language_controller.index'))
         else:
-            return render_template('programming_languages/edit.html')
+            return render_template('programming_languages/edit.html',programming_language=programming_language)
 
     except Exception as e:
         return jsonify(error=str(e)), 400
 
-@programming_language_controller.route('/delete/<int:language_id>', methods=['DELETE'])
+@programming_language_controller.route('/delete/<int:language_id>', methods=['POST'])
 @login_required
 def delete(language_id):
     try:
         success = ProgrammingLanguageService.delete_programming_language(language_id)
-        if success:
-            return redirect(url_for('main.programming_language_controller.index'))
+       
     except Exception as e:
         return jsonify(error=str(e)), 400

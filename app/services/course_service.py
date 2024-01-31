@@ -1,9 +1,8 @@
 from ..services.category_service import CategoryService
 from ..services.provider_service import ProviderService
 from ..services.course_programming_language_service import CourseProgrammingLanguageService
-from ..models.data_model import db,Course
-from ..models.data_model import db,CourseProgrammingLanguage
-from ..models.data_model import db,ProgrammingLanguage
+from ..models.data_model import db,Course,CourseProgrammingLanguage,ProgrammingLanguage 
+
 from PIL import Image
 from io import BytesIO
 import base64
@@ -22,7 +21,7 @@ class CourseService:
             return base64_image
         return None
     @staticmethod
-    def create_course(course_name, course_description, course_rate, course_path, provider_id, category_id, course_image):
+    def create_course(course_name, course_description, course_rate, course_path, provider_id, category_id,language_ids, course_image):
         provider = ProviderService.get_provider_by_id(provider_id)
         category = CategoryService.get_category_by_id(category_id)
 
@@ -47,11 +46,21 @@ class CourseService:
         )
 
         db.session.add(new_course)
+        languages = CourseProgrammingLanguage.query.filter(ProgrammingLanguage.language_id.in_(language_ids)).all()
+        
+        for language in languages:
+            new_course_programming_language = CourseProgrammingLanguage(
+                course_id=new_course.course_id,
+                language_id=language.language_id
+            )
+            CourseProgrammingLanguageService.create_course_programming_language(new_course_programming_language)
+        
+
         db.session.commit()
         return new_course
 
     @staticmethod
-    def edit_course(course_id, new_course_name, new_course_description, new_course_rate, new_course_path, new_provider_id, new_category_id, new_course_image):
+    def edit_course(course_id, new_course_name, new_course_description, new_course_rate, new_course_path, new_provider_id, new_category_id,new_language_ids, new_course_image):
         course = Course.query.get(course_id)
         if course:
             course.course_name = new_course_name
@@ -66,6 +75,31 @@ class CourseService:
                 image_stream = BytesIO(new_course_image.read())
                 img = Image.open(image_stream)
                 course.course_image = image_stream.getvalue()
+            
+            current_languages = CourseProgrammingLanguage.query.filter_by(course_id=course.course_id).all()
+            print('current_languages',current_languages)
+            current_language_ids = set(language.language_id for language in current_languages)
+            print('current_language_ids',current_language_ids)
+            selected_language_ids_set = set(new_language_ids)
+            print('selected_language_ids_set',selected_language_ids_set)
+
+            new_languages_to_add = selected_language_ids_set - current_language_ids
+            languages_to_remove = current_language_ids - selected_language_ids_set
+            print('remove', languages_to_remove)
+
+            for language_id in languages_to_remove:
+                CourseProgrammingLanguage.query.filter_by(course_id=course.course_id, language_id=language_id).delete()
+            
+            print('add', new_languages_to_add)
+            for language_id in new_languages_to_add:
+                new_course_programming_language = CourseProgrammingLanguage(
+                    course_id=course.course_id,
+                    language_id=language_id
+                )
+                db.session.add(new_course_programming_language)
+            
+            
+
 
             db.session.commit()
             return course

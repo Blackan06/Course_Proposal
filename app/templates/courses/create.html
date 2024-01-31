@@ -10,6 +10,7 @@
     <meta name="author" content="">
 
     <title>Recomendation Course</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
     <!-- Custom fonts for this template-->
     <link href="{{url_for('static', filename='vendor/fontawesome-free/css/all.min.css' )}}" rel="stylesheet" type="text/css">
@@ -211,7 +212,15 @@
                                     {% endfor %}
                                 </select>
                             </div>
-
+                            <div class="form-group">
+                                <label for="language">Language:</label>
+                                <select class="form-control select2" id="language_id" name="language_id[]" multiple="multiple" required>
+                                    {% for language in languages %}
+                                        <option value="{{ language.language_id }}">{{ language.language_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
                             <div class="form-group">
                                 <label for="course_image">Course Image:</label>
                                 <input class="form-control" type="file" id="course_image" name="course_image" accept="image/*" required>
@@ -270,7 +279,7 @@
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="{{url_for('static', filename='vendor/jquery/jquery.min.js')}}"></script>
+    <script src="{{url_for('static', filename='vendor/jquery/jquery-3.2.1.min.js')}}"></script>
     <script src="{{url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 
     <!-- Core plugin JavaScript-->
@@ -278,8 +287,18 @@
 
     <!-- Custom scripts for all pages-->
     <script src="{{url_for('static', filename='js/sb-admin-2.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/select2/select2.min.js') }}"></script>
 
-
+    <script>
+        $(document).ready(function() {
+          $('#language_id').select2(
+                {
+                    placeholder: 'Select an language'
+                }
+          ); 
+        });
+    </script>
 </body>
 
 </html>

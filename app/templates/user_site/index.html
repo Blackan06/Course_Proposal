@@ -77,7 +77,7 @@
 
 	<!-- Title page -->
 	<section class="bg-overlay1 bg-img1 txt-center p-lr-15 p-tb-200"
-		style="background-image: url('{{ url_for('static', filename='images/bg-01.jpg') }}');">
+         style="background-image: url('{{ url_for('static', filename='images/bg-01.jpg') | safe }}');">
 		<h2 class="ltext-105 cl0 txt-center">
 			GROUP!
 		</h2>
@@ -89,25 +89,25 @@
 						<div class="input-group-btn search-panel">
 							<select id="categories" name="categories" type="button"
 								class="btn btn-default dropdown-toggle">
-								<option value="all">All</option>
+								<option value="Category">Category</option>
 								{% for category in categories %}
-								<option value="{{ category.category_id }}">{{ category.category_name }}</option>
+									<option value="{{ category.category_id }}">{{ category.category_name }}</option>
 								{% endfor %}
 							</select>
 							<select id="providers" name="providers" type="button"
 								class="btn btn-default dropdown-toggle">
-								<option value="all">All</option>
+								<option value="Provider">Provider</option>
 								{% for provider in providers %}
-								<option value="{{ provider.provider_id }}">{{ provider.provider_name }}</option>
+									<option value="{{ provider.provider_id }}">{{ provider.provider_name }}</option>
 								{% endfor %}
 							</select>
-							<select id="programing_languages" name="programing_languages" type="button"
+							<select id="programming_languages" name="programming_languages" type="button"
 								class="btn btn-default dropdown-toggle">
-								<option value="all">All</option>
-								{% for programing_language in programing_languages %}
-								<option value="{{ programing_language.language_id }}">{{ programing_language.language_name }}</option>
+								<option value="Programming Language">Programming Language</option>
+								{% for programming_language in programming_languages %}
+									<option value="{{ programming_language.language_id }}">{{ programming_language.language_name }}</option>
 								{% endfor %}
-							</select>
+							</select>  
 						</div>
 						<div class="bor17 of-hidden pos-relative">
 							<input class="stext-103 cl2 plh4 size-116 p-l-28 p-r-55" type="text" placeholder="Search"
@@ -213,7 +213,7 @@
 													{% endif %}
 													{% endfor %}
 											</p>
-											<p>Skills will learn:</p>
+											<p>Skills will learn: {{ course.category.skills.skill_name}}</p>
 											<p>Provider: {{ course.provider.provider_name | safe }}</p>
 										</div>
 									</div>
@@ -258,7 +258,11 @@
 												{% endif %}
 												{% endfor %}
 										</p>
-										<p>Skills will learn:</p>
+										<p>Skills will learn: 
+											{% for skill in course.category.skills %}
+												<div style="display: inline-block;">{{ skill.skill_name }}</div>
+											{% endfor %}
+										</p>										
 										<p>Provider: {{ course.provider.provider_name | safe }}</p>
 									</div>
 								</div>

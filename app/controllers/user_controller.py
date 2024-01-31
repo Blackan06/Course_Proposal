@@ -19,18 +19,19 @@ def index():
             'course_rate': course.course_rate,
             'course_path': course.course_path,         
             'provider': course.provider,  
-            'category': course.category,
+            'course_programming_languages': course.course_programming_languages,
             'course_image': CourseService.convert_image_to_base64(course.course_image),
+            'category': course.category,
         }
         for course in courses
     ]
     providers = ProviderService.get_all_provider()
     categories = CategoryService.get_all_category()
-    programing_languages = ProgrammingLanguageService.get_all_programming_language()
+    programming_languages = ProgrammingLanguageService.get_all_programming_language()
     print(categories)
     #return render_template('users/index.html', courses=courses_with_base64_images)
     return render_template('user_site/index.html', courses=courses_with_base64_images, providers=providers, categories=categories, 
-                                                    programing_languages=programing_languages)
+                                                    programming_languages=programming_languages)
 
 @user_controller.route('/search', methods=['POST'])
 def search():
@@ -125,10 +126,22 @@ def get_course(course_id):
             # Handle the case where the course with the given ID doesn't exist.
             return jsonify(error=f"Course with ID {course_id} not found"), 404
 
+        course_with_base64_images = {
+            'course_id': course.course_id,
+            'course_name': course.course_name,
+            'course_description': course.course_description,
+            'course_rate': course.course_rate,
+            'course_path': course.course_path,         
+            'provider': course.provider,  
+            'course_programming_languages': course.course_programming_languages,
+            'course_image': CourseService.convert_image_to_base64(course.course_image),
+            'category': course.category, 
+        }
+
         providers = ProviderService.get_all_provider()
         categories = CategoryService.get_all_category()
-        return render_template('user_site/course_detail.html', course=course, providers=providers, categories=categories)
+
+        return render_template('user_site/course_detail.html', course=course_with_base64_images, providers=providers, categories=categories)
 
     except ValueError as e:
         return jsonify(error=str(e)), 400
-

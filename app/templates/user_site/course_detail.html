@@ -104,11 +104,9 @@
 					<div class="p-r-45 p-r-0-lg">
 
 						<div class="p-t-32">
-
 							<h4 class="ltext-109 cl2 p-b-28">
 								{{course.course_name}}
-							</h4>
-
+							</h4>	
 							<p class="stext-117 cl6 p-b-26">
 								{{course.course_description}}
 							</p>
@@ -121,13 +119,12 @@
 							</h5>
 
 							<div class="flex-w size-217">
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Streetstyle
-								</a>
-
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Crafts
-								</a>
+								{% for skill in course.category.skills %}
+									<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
+										{{ skill.skill_name }}
+									</a>
+								{% endfor %}
+							
 							</div>
 						</div>
 
@@ -137,13 +134,12 @@
 							</h5>
 
 							<div class="flex-w size-217">
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Streetstyle
-								</a>
-
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Crafts
-								</a>
+								{% for language in course.course_programming_languages.language %}
+									<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
+										{{ language.language_name }}
+									</a>
+								{% endfor %}
+								
 							</div>
 						</div>
 
@@ -155,8 +151,8 @@
 					<div class="side-menu">
 						<div class="p-t-55 text-center">
 							<div class="card">
-								{% if course.course_image %}
-										<img class="img-fluid" src="data:image/png;base64,{{ course.course_image }}" alt="...">
+									{% if course.course_image %}
+										<img class="img-fluid" src="data:image/png;base64,{{ course.course_image }}" alt="Course Image">
 									{% else %}
 										<img class="img-fluid" src="{{ url_for('static', filename='images/product-01.jpg')}}" alt="...">
 									{% endif %}
@@ -179,7 +175,9 @@
 										{% endfor %}
 									</p>
 									<br>
-									<button type="button" class="btn btn-primary">Enroll now</button>
+									<a href="{{ course.course_path }}">
+										<button type="button" class="btn btn-primary">Enroll now</button>
+									</a>								
 								</div>
 							</div>
 						</div>

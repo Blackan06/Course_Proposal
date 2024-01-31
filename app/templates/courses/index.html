@@ -22,7 +22,18 @@
     <link href="{{url_for('static', filename='css/sb-admin-2.min.css' )}}" rel="stylesheet">
 
     <link href="{{url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.css' )}}" rel="stylesheet">
-
+    <style>
+        .image-container {
+            max-width: 100%; 
+            height: auto; 
+            overflow: hidden; 
+        }
+    
+        .image-container img {
+            width: 100%; 
+            height: auto; 
+        }
+    </style>
 </head>
 
 
@@ -47,18 +58,16 @@
                 <a class="nav-link" href="{{ url_for('main.course_controller.index') }}">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Courses</span></a>
-                <a class="nav-link" href="{{ url_for('main.course_controller.create') }}">
+                <a class="nav-link" href="{{ url_for('main.category_controller.index') }}">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Add Course</span></a>
-                <a class="nav-link" href="{{ url_for('main.category_controller.create') }}">
+                    <span>Category</span></a>
+                <a class="nav-link" href="{{ url_for('main.provider_controller.index') }}">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Add Category</span></a>
-                <a class="nav-link" href="{{ url_for('main.programming_language_controller.create') }}">
+                    <span>Provider</span></a>
+                <a class="nav-link" href="{{ url_for('main.programming_language_controller.index') }}">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Add Programing Language</span></a>
-                <a class="nav-link" href="{{ url_for('main.provider_controller.create') }}">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Add Provider</span></a>
+                    <span>Programming Language</span></a>
+               
             </li>
 
             <!-- Divider -->
@@ -201,6 +210,7 @@
                                             <th>Path</th>
                                             <th>Provider</th>
                                             <th>Category</th>
+                                            <th>Language</th>
                                             <th>Image</th>
                                             <th></th>
                                         </tr>
@@ -215,10 +225,18 @@
                                             <td>{{ course.provider.provider_name | safe }}</td>
                                             <td>{{ course.category.category_name | safe }}</td>
                                             <td>
-                                                {% if course.course_image %}
-                                                    <img src="data:image/png;base64,{{ course.course_image }}" alt="Course Image">
-                                                {% endif %}
+                                                {% for programming_language in course.course_programming_languages %}
+                                                    {{ programming_language.language.language_name }}
+                                                    {% if not loop.last %}, {% endif %} 
+                                                {% endfor %}
                                             </td>
+                                            <td>
+                                                {% if course.course_image %}
+                                                    <div class="image-container">
+                                                        <img src="data:image/png;base64,{{ course.course_image }}" alt="Course Image">
+                                                    </div>
+                                                {% endif %}
+                                            </td>                                            
                                             <td>
                                                 <a
                                                     href="{{ url_for('main.course_controller.edit', course_id=course.course_id) }}"><i
@@ -295,7 +313,7 @@
     <!-- Custom scripts for all pages-->
     <script src="{{url_for('static', filename='js/sb-admin-2.min.js')}}"></script>
 
-
+     
 </body>
 
 </html>

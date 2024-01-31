@@ -3,8 +3,8 @@ from ..models.data_model import db, Skill
 class SkillService:
 
     @staticmethod
-    def get_all_skill():
-        return Skill.query.all()
+    def get_all_skill(category_id):
+        return Skill.query.filter_by(category_id=category_id).all()
     
     @staticmethod
     def get_skill_by_id(skill_id):

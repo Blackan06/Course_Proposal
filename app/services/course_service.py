@@ -115,7 +115,7 @@ class CourseService:
         return False
     
     @staticmethod
-    def search_course_by_name(category, provider, programming_language, input_name=None):
+    def search_course_by_name(category, provider, programming_language, max_rate, input_name=None):
         courses = Course.query
         if input_name:
             courses = courses.filter(Course.course_name.ilike(f"%{input_name}%"))
@@ -129,7 +129,7 @@ class CourseService:
             .filter(CourseProgrammingLanguage.language_id == programming_language)
         )
             
-        courses = courses.all()
+        courses = courses.filter(Course.course_rate >= max_rate).all()
         return courses
 
     @staticmethod

@@ -6,6 +6,7 @@ from .controllers.category_controller import category_controller
 from .controllers.provider_controller import provider_controller
 from .controllers.course_programming_language_controller import course_programming_language_controller
 from .controllers.programming_language_controller import programming_language_controller
+from .controllers.user_controller import user_controller
 
 main = Blueprint('main', __name__)
 
@@ -16,3 +17,4 @@ main.register_blueprint(category_controller)
 main.register_blueprint(provider_controller)
 main.register_blueprint(programming_language_controller)
 main.register_blueprint(course_programming_language_controller)
+main.register_blueprint(user_controller)

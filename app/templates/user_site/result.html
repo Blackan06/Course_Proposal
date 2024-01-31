@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Recomendation Course</title>
+<!--===============================================================================================-->	
+<link rel="icon" type="image/png" href="{{ url_for('static', filename = 'images/icons/favicon.png' ) }}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'vendor/bootstrap/css/bootstrap.min.css' ) }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' ) }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'fonts/iconic/css/material-design-iconic-font.min.css' ) }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'fonts/linearicons-v1.0.0/icon-font.min.css' ) }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'vendor/animate/animate.css' ) }}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'vendor/css-hamburgers/hamburgers.min.css' ) }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'vendor/animsition/css/animsition.min.css' ) }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'vendor/select2/select2.min.css' ) }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'vendor/perfect-scrollbar/perfect-scrollbar.css' ) }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'css/util.css' ) }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'css/main.css' ) }}">
+<!--===============================================================================================-->
+</head>
+<body class="animsition">
+	
+	<!-- Header -->
+	<header class="header-v4">
+		<!-- Header desktop -->
+		<div class="container-menu-desktop">
+			<!-- Topbar -->
+			<div class="top-bar">
+				<div class="content-topbar flex-sb-m h-full container">
+					<div class="left-top-bar">
+						Enroll the best online course now!!
+					</div>
+
+					<div class="right-top-bar flex-w h-full">
+						<a href="#" class="flex-c-m trans-04 p-lr-25">
+							Help & FAQs
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="wrap-menu-desktop how-shadow1">
+				<nav class="limiter-menu-desktop container">
+					
+					<!-- Logo desktop -->		
+					<a href="{{url_for('main.user_controller.index')}}" class="logo text-dark">
+						<h1>GROUP!</h1>
+					</a>
+					
+					<!-- Menu desktop -->
+					<div class="menu-desktop">
+						<ul class="main-menu">
+							<li>
+								<div class="col-xs-8 col-xs-offset-2">
+									<form method="POST" action="{{ url_for('main.user_controller.search') }}">
+										<div class="input-group">
+											<div class="input-group-btn search-panel">
+												<select id="categories" name="categories" type="button"
+													class="btn btn-default dropdown-toggle">
+													<option value="all">All</option>
+													{% for category in categories %}
+													<option value="{{ category.category_id }}">{{ category.category_name }}</option>
+													{% endfor %}
+												</select>
+												<select id="providers" name="providers" type="button"
+													class="btn btn-default dropdown-toggle">
+													<option value="all">All</option>
+													{% for provider in providers %}
+													<option value="{{ provider.provider_id }}">{{ provider.provider_name }}</option>
+													{% endfor %}
+												</select>
+												<select id="programing_languages" name="programing_languages" type="button"
+													class="btn btn-default dropdown-toggle">
+													<option value="all">All</option>
+													{% for programing_language in programing_languages %}
+													<option value="{{ programing_language.language_id }}">{{ programing_language.language_name }}</option>
+													{% endfor %}
+												</select>
+											</div>
+											<div class="bor17 of-hidden pos-relative">
+												<input class="stext-103 cl2 plh4 size-116 p-l-28 p-r-55" type="text" placeholder="Search"
+													id="coursename" name="coursename">
+					
+												<button type="submit" class="flex-c-m size-122 ab-t-r fs-18 cl4 hov-cl1 trans-04">
+													<i class="zmdi zmdi-search"></i>
+												</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</li>
+
+						</ul>
+					</div>
+					
+				</nav>
+			</div>	
+		</div>
+
+
+	</header>
+	
+	<!-- Product -->
+	<div class="bg0 m-t-23 p-b-140">
+		<div class="container">
+			<div class="flex-w flex-sb-m p-b-52">
+				<div class="flex-w flex-l-m filter-tope-group m-tb-10">
+					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1 pb-3" data-filter="*">
+						All (5)
+					</button>
+
+					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 pb-3" data-filter=".Coursera">
+						<img src="{{url_for('static', filename = 'images/coursera.svg' ) }}" alt="" width="50%"> <span> (5)</span>
+					</button>
+
+					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".Udemy">
+						<img src="{{url_for('static', filename = 'images/udemy.svg' ) }}" alt="" width="30%"><span> (5)</span>
+					</button>
+
+				</div>
+
+				<div class="flex-w flex-c-m m-tb-10">
+					<div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter">
+						<i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
+						<i class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
+						 Filter
+					</div>
+				</div>
+
+				<!-- Filter -->
+				<div class="dis-none panel-filter w-full p-t-10">
+					<div class="wrap-filter flex-w bg6 w-full p-lr-40 p-t-27 p-lr-15-sm">
+
+						<div class="filter-col2 p-r-15 p-b-27">
+							<div class="mtext-102 cl2 p-b-15">
+								Rating
+							</div>
+
+							<ul>
+								<li class="p-b-6">
+									<div class="form-check">
+										<input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+										<label class="form-check-label" for="exampleRadios1">
+											All
+										</label>
+									</div>
+								</li>
+
+								<li class="p-b-6">
+									<a href="#" class="filter-link stext-106 trans-04">
+										<div class="form-check">
+											<input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+											<label class="form-check-label" for="exampleRadios1">
+												5 stars
+												<span class="fa fa-star checked"></span>
+												<span class="fa fa-star checked"></span>
+												<span class="fa fa-star checked"></span>
+												<span class="fa fa-star checked"></span>
+												<span class="fa fa-star checked"></span>
+											</label>
+										</div>
+									</a>
+								</li>
+
+								<li class="p-b-6">
+									<a href="#" class="filter-link stext-106 trans-04">
+										<div class="form-check">
+											<input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+											<label class="form-check-label" for="exampleRadios1">
+												From 4 stars
+												<span class="fa fa-star checked"></span>
+												<span class="fa fa-star checked"></span>
+												<span class="fa fa-star checked"></span>
+												<span class="fa fa-star checked"></span>
+												<span class="fa fa-star "></span>
+											</label>
+										</div>
+									</a>
+								</li>
+
+								<li class="p-b-6">
+									<a href="#" class="filter-link stext-106 trans-04">
+										<div class="form-check">
+											<input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+											<label class="form-check-label" for="exampleRadios1">
+												Fro 3 stars
+												<span class="fa fa-star checked"></span>
+												<span class="fa fa-star checked"></span>
+												<span class="fa fa-star checked"></span>
+												<span class="fa fa-star "></span>
+												<span class="fa fa-star "></span>
+											</label>
+										</div>
+									</a>
+								</li>
+							</ul>
+						</div>
+
+						<div class="filter-col4 p-b-27">
+							<div class="mtext-102 cl2 p-b-15">
+								Category
+							</div>
+
+							<div class="flex-w p-t-4 m-r--5">
+								{% for category in categories %}
+								<div class="form-check  stext-107 cl6 size-301 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
+									<input class="form-check-input" type="checkbox" value="{{ category.category_id }}" id="defaultCheck1">
+									<label class="form-check-label" for="defaultCheck1">
+										{{ category.category_name }}
+									</label>
+								</div>
+								{% endfor %}
+							</div>
+						</div>
+
+						<div class="filter-col4 p-b-27">
+							<div class="mtext-102 cl2 p-b-15">
+								Programming Language
+							</div>
+
+							<div class="flex-w p-t-4 m-r--5">
+								<div class="form-check  stext-107 cl6 size-301 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
+									<input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+									<label class="form-check-label" for="defaultCheck1">
+										Database
+									</label>
+								</div>
+							</div>
+						</div>
+
+						<div class="filter-col2 p-b-27">
+							<button type="submit" class="btn btn-primary">Search</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row isotope-grid">
+				{% for course in courses %}
+				<div class="col-4 p-b-35 isotope-item {{ course.provider.provider_name }}">
+					<a href="{{ url_for('main.user_controller.get_course', course_id=course.course_id) }}" class="text-dark">
+						<div class="card mb-4">
+							<div class="row no-gutters">
+								<div class="col-md-4">
+									{% if course.course_image %}
+										<img class="img-fluid" src="data:image/png;base64,{{ course.course_image }}" alt="...">
+									{% else %}
+										<img class="img-fluid" src="{{ url_for('static', filename='images/product-01.jpg')}}" alt="...">
+									{% endif %}
+								</div>
+								<div class="col-md-8">
+									<div class="card-body">
+										<h5 class="card-title">{{ course.course_name | safe }}</h5>
+										<p class="card-text">{{ course.course_description | safe }}</p>
+										<hr>
+										<p> {{ course.course_rate | safe }}
+										{% for i in range(1, 6) %}
+											{% if i <= course.course_rate %}
+												<span class="fa fa-star checked"></span>
+											{% else %}
+												<span class="fa fa-star"></span>
+											{% endif %}
+										{% endfor %}
+										</p>
+										<p>Skills will learn:</p>
+										<p>Provider: {{ course.provider.provider_name | safe }}</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</a>
+				</div>
+				{% endfor %}
+
+
+			</div>
+
+		</div>
+	</div>
+		
+
+	<!-- Footer -->
+	<footer class="bg3 p-t-75 p-b-32">
+		<div class="container">
+			<div class="p-t-10">
+				<p class="stext-107 cl6 txt-center">
+					<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+					Copyright &copy;2024 <i class="fa fa-heart-o" aria-hidden="true"></i> by GROUP! FSB
+					<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+
+				</p>
+			</div>
+		</div>
+	</footer>
+
+
+	<!-- Back to top -->
+	<div class="btn-back-to-top" id="myBtn">
+		<span class="symbol-btn-back-to-top">
+			<i class="zmdi zmdi-chevron-up"></i>
+		</span>
+	</div>
+
+
+<!--===============================================================================================-->	
+<script src="{{ url_for('static', filename='vendor/jquery/jquery-3.2.1.min.js')}}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='vendor/animsition/js/animsition.min.js')}}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='vendor/bootstrap/js/popper.js')}}"></script>
+	<script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.min.js')}}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='vendor/select2/select2.min.js')}}"></script>
+	<script>
+		$(".js-select2").each(function(){
+			$(this).select2({
+				minimumResultsForSearch: 20,
+				dropdownParent: $(this).next('.dropDownSelect2')
+			});
+		})
+	</script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='vendor/MagnificPopup/jquery.magnific-popup.min.js')}}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='vendor/perfect-scrollbar/perfect-scrollbar.min.js')}}"></script>
+	<script>
+		$('.js-pscroll').each(function(){
+			$(this).css('position','relative');
+			$(this).css('overflow','hidden');
+			var ps = new PerfectScrollbar(this, {
+				wheelSpeed: 1,
+				scrollingThreshold: 1000,
+				wheelPropagation: false,
+			});
+
+			$(window).on('resize', function(){
+				ps.update();
+			})
+		});
+	</script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='js/main.js')}}"></script>
+	<script>
+		$(document).ready(function(e){
+			$('.search-panel .dropdown-menu').find('a').click(function(e) {
+				e.preventDefault();
+				var param = $(this).attr("href").replace("#","");
+				var concept = $(this).text();
+				$('.search-panel span#search_concept').text(concept);
+				$('.input-group #search_param').val(param);
+			});
+		});
+	</script>
+
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='vendor/daterangepicker/moment.min.js')}}"></script>
+	<script src="{{ url_for('static', filename='vendor/daterangepicker/daterangepicker.js')}}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='vendor/slick/slick.min.js')}}"></script>
+	<script src="{{ url_for('static', filename='js/slick-custom.js')}}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='vendor/parallax100/parallax100.js')}}"></script>
+	<script>
+        $('.parallax100').parallax100();
+	</script>
+<!--===============================================================================================-->
+	<script>
+		$('.gallery-lb').each(function() { // the containers for all your galleries
+			$(this).magnificPopup({
+		        delegate: 'a', // the selector for gallery item
+		        type: 'image',
+		        gallery: {
+		        	enabled:true
+		        },
+		        mainClass: 'mfp-fade'
+		    });
+		});
+	</script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='vendor/isotope/isotope.pkgd.min.js')}}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='vendor/sweetalert/sweetalert.min.js')}}"></script>
+
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='vendor/perfect-scrollbar/perfect-scrollbar.min.js')}}"></script>
+	<script>
+		$('.js-pscroll').each(function(){
+			$(this).css('position','relative');
+			$(this).css('overflow','hidden');
+			var ps = new PerfectScrollbar(this, {
+				wheelSpeed: 1,
+				scrollingThreshold: 1000,
+				wheelPropagation: false,
+			});
+
+			$(window).on('resize', function(){
+				ps.update();
+			})
+		});
+	</script>
+<!--===============================================================================================-->
+</body>
+</html>

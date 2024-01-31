@@ -29,23 +29,22 @@ def create():
 @login_required
 def edit(provider_id):
     try:
+        provider = Provider.query.get(provider_id)
         if request.method == 'POST':
-            provider = Provider.query.get(provider_id)
             new_provider_name = request.form['provider_name']
             ProviderService.edit_provider(provider_id, new_provider_name)
             return redirect(url_for('main.provider_controller.index'))
         else:
-            return render_template('providers/edit.html')
+            return render_template('providers/edit.html',provider=provider)
 
     except Exception as e:
         return jsonify(error=str(e)), 400
 
-@provider_controller.route('/delete/<int:provider_id>', methods=['DELETE'])
+@provider_controller.route('/delete/<int:provider_id>', methods=['POST'])
 @login_required
 def delete(provider_id):
     try:
         success = ProviderService.delete_provider(provider_id)
-        if success:
-            return redirect(url_for('main.provider_controller.index'))
+       
     except Exception as e:
         return jsonify(error=str(e)), 400

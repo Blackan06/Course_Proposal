@@ -28,22 +28,20 @@ def create():
 @login_required
 def edit(category_id):
     try:
+        category = CategoryService.get_category_by_id(category_id)
         if request.method == 'POST':
-            category = CategoryService.get_category_by_id(category_id)
-            new_category_name = request.form['category_name']
-            CategoryService.edit_category(category_id, new_category_name)
+            category_name = request.form['category_name']
+            CategoryService.edit_category(category_id, category_name)
             return redirect(url_for('main.category_controller.index'))
         else:
-            return render_template('categories/edit.html')
+            return render_template('categories/edit.html',category=category)
     except Exception as e:
         return jsonify(error=str(e)), 400
 
-@category_controller.route('/delete/<int:category_id>', methods=['DELETE'])
+@category_controller.route('/delete/<int:category_id>', methods=['POST'])
 @login_required
 def delete(category_id):
     try:
         success = CategoryService.delete_category(category_id)
-        if success:
-            return redirect(url_for('main.category_controller.index'))
     except Exception as e:
         return jsonify(error=str(e)), 400

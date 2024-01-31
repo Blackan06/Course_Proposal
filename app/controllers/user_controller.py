@@ -60,7 +60,11 @@ def search():
         for course in courses
         ]
         # return render_template('users/index.html', courses=courses_with_base64_images)
-        return render_template('user_site/result.html', courses=courses_with_base64_images)
+        providers = ProviderService.get_all_provider()
+        categories = CategoryService.get_all_category()
+        programing_languages = ProgrammingLanguageService.get_all_programming_language()
+        return render_template('user_site/result.html', courses=courses_with_base64_images, providers=providers, categories=categories, 
+                                                    programing_languages=programing_languages)
 
 @user_controller.route('/get_course_attribute', methods=['GET'])
 def get_course_attribute():
@@ -82,7 +86,9 @@ def get_course_attribute():
 
         providers = ProviderService.get_all_provider()
         categories = CategoryService.get_all_category()
-        return render_template('user_site/index.html', providers=providers, categories=categories, courses=courses_with_base64_images)
+        programing_languages = ProgrammingLanguageService.get_all_programming_language()
+        return render_template('user_site/index.html', providers=providers, categories=categories, courses=courses_with_base64_images, 
+                                                    programing_languages=programing_languages)
 
 @user_controller.route('/filter', methods=['GET','POST'])
 def filter():
@@ -106,8 +112,9 @@ def filter():
 
         providers = ProviderService.get_all_provider()
         categories = CategoryService.get_all_category()
-
-        return render_template('users/proposal.html', courses=courses_with_base64_images, providers=providers, categories=categories)
+        programing_languages = ProgrammingLanguageService.get_all_programming_language()
+        return render_template('users/proposal.html', courses=courses_with_base64_images, providers=providers, categories=categories,
+                                                        programing_languages=programing_languages)
     
 @user_controller.route('/get_course/<int:course_id>', methods=['GET'])
 def get_course(course_id):

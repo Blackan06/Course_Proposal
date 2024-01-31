@@ -11,6 +11,14 @@ class ProviderService:
         return Provider.query.get(provider_id)
     
     @staticmethod
+    def get_provider_by_name(provider_name):
+        provider = Provider.query.filter_by(provider_name=provider_name).first()
+        if provider:
+            return provider.provider_id
+        else:
+            return None 
+    
+    @staticmethod
     def create_provider(provider_name):
         new_provider = Provider(provider_name=provider_name)
         db.session.add(new_provider)

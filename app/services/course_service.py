@@ -1,8 +1,8 @@
 from ..services.category_service import CategoryService
 from ..services.provider_service import ProviderService
+from ..services.programming_language_service import ProgrammingLanguageService
 from ..services.course_programming_language_service import CourseProgrammingLanguageService
 from ..models.data_model import db,Course,CourseProgrammingLanguage,ProgrammingLanguage 
-
 from PIL import Image
 from io import BytesIO
 import base64
@@ -31,6 +31,7 @@ class CourseService:
         # Convert image to binary data
         course_image_binary = None
         if course_image:
+            print(course_image)
             image_stream = BytesIO(course_image.read())
             img = Image.open(image_stream)
             course_image_binary = image_stream.getvalue()
@@ -43,13 +44,13 @@ class CourseService:
             provider_id=provider_id,
             category_id=category_id,
             
-            course_image=course_image_binary
+            course_image=None
         )
 
+        print(new_course)
         db.session.add(new_course)
         
         languages = CourseProgrammingLanguage.query.filter(ProgrammingLanguage.language_id.in_(language_ids)).all()
-        print('languages ', languages)
         for language in language_ids:
             new_course_programming_language = CourseProgrammingLanguage(
                 course_id=new_course.course_id,
@@ -59,7 +60,31 @@ class CourseService:
 
         db.session.commit()
         return new_course
-
+    
+    @staticmethod
+    def insert_excel(objects):   
+        print(objects)
+        for obj in objects:
+            provider = ProviderService.get_provider_by_name(obj.get('provider_name'))
+            category = CategoryService.get_category_by_name(obj.get('category_name'))
+            course_image_binary = None
+            new_course = Course(
+                course_name=obj.get('course_name'),
+                course_description=obj.get('course_description'),
+                course_rate=obj.get('course_rate'),
+                course_path=obj.get('course_path'),
+                provider_id=provider,
+                category_id=category,
+                course_image= course_image_binary
+            )
+            try:
+                db.session.add(new_course)               
+            except (IndexError, ValueError) as e:
+                    print(f"Error: {e}")
+            
+        db.session.commit()
+        return new_course
+    
     @staticmethod
     def edit_course(course_id, new_course_name, new_course_description, new_course_rate, new_course_path, new_provider_id, new_category_id,new_language_ids, new_course_image):
         course = Course.query.get(course_id)
@@ -98,9 +123,6 @@ class CourseService:
                     language_id=language_id
                 )
                 db.session.add(new_course_programming_language)
-            
-            
-
 
             db.session.commit()
             return course

@@ -42,9 +42,19 @@
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('main.course_controller.index') }}">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Courses</span></a>
+                <a class="nav-link" href="{{ url_for('main.category_controller.index') }}">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Category</span></a>
+                <a class="nav-link" href="{{ url_for('main.provider_controller.index') }}">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Provider</span></a>
                 <a class="nav-link" href="{{ url_for('main.programming_language_controller.index') }}">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Programming Language</span></a>
+               
             </li>
 
             <!-- Divider -->

@@ -37,13 +37,13 @@ def index():
 def search():
         input_name = request.form['coursename']
         category = request.form['categories']
-        provider = request.form['providers']
-        programing_language = request.form['programing_languages']
+        # provider = request.form['providers']
+        # programming_languages = request.form['programming_languages']
 
         print("category", category)
-        print("Provider", provider)
+        #print("Provider", provider)
 
-        courses = CourseService.search_course_by_name(input_name=input_name, category=category, provider=provider, programming_language=programing_language)
+        courses = CourseService.search_course_by_name(input_name=input_name, category=category)
 
         # print('courses is here')
 
@@ -63,9 +63,9 @@ def search():
         # return render_template('users/index.html', courses=courses_with_base64_images)
         providers = ProviderService.get_all_provider()
         categories = CategoryService.get_all_category()
-        programing_languages = ProgrammingLanguageService.get_all_programming_language()
+        programming_languages = ProgrammingLanguageService.get_all_programming_language()
         return render_template('user_site/result.html', courses=courses_with_base64_images, providers=providers, categories=categories, 
-                                                    programing_languages=programing_languages)
+                                                    programming_languages=programming_languages)
 
 @user_controller.route('/get_course_attribute', methods=['GET'])
 def get_course_attribute():
@@ -93,29 +93,57 @@ def get_course_attribute():
 
 @user_controller.route('/filter', methods=['GET','POST'])
 def filter():
+        # category = request.form['categories']
+        # provider = request.form['providers']
+        # print(category)
+        # courses = CourseService.filter_courses(category=category, provider=provider)
+
+        # courses_with_base64_images = [
+        #     {
+        #         'course_name': course.course_name,
+        #         'course_description': course.course_description,
+        #         'course_rate': course.course_rate,
+        #         'course_path': course.course_path,         
+        #         'provider': course.provider,  
+        #         'category': course.category,
+        #         'course_image': CourseService.convert_image_to_base64(course.course_image),
+        #     }
+        #     for course in courses
+        # ]
+
+        # providers = ProviderService.get_all_provider()
+        # categories = CategoryService.get_all_category()
+        # programing_languages = ProgrammingLanguageService.get_all_programming_language()
+        # return render_template('users/proposal.html', courses=courses_with_base64_images, providers=providers, categories=categories,
+        #                                                 programing_languages=programing_languages)
+     
         category = request.form['categories']
-        provider = request.form['providers']
-        print(category)
-        courses = CourseService.filter_courses(category=category, provider=provider)
+
+        print("category", category)
+
+        courses = CourseService.search_course_by_name(category=category)
+
+        # print('courses is here')
 
         courses_with_base64_images = [
-            {
-                'course_name': course.course_name,
-                'course_description': course.course_description,
-                'course_rate': course.course_rate,
-                'course_path': course.course_path,         
-                'provider': course.provider,  
-                'category': course.category,
-                'course_image': CourseService.convert_image_to_base64(course.course_image),
-            }
-            for course in courses
+        {
+            'course_id': course.course_id,
+            'course_name': course.course_name,
+            'course_description': course.course_description,
+            'course_rate': course.course_rate,
+            'course_path': course.course_path,         
+            'provider': course.provider,  
+            'category': course.category,
+            'course_image': CourseService.convert_image_to_base64(course.course_image),
+        }
+        for course in courses
         ]
-
+        # return render_template('users/index.html', courses=courses_with_base64_images)
         providers = ProviderService.get_all_provider()
         categories = CategoryService.get_all_category()
-        programing_languages = ProgrammingLanguageService.get_all_programming_language()
-        return render_template('users/proposal.html', courses=courses_with_base64_images, providers=providers, categories=categories,
-                                                        programing_languages=programing_languages)
+        programming_languages = ProgrammingLanguageService.get_all_programming_language()
+        return render_template('user_site/result.html', courses=courses_with_base64_images, providers=providers, categories=categories, 
+                                                    programming_languages=programming_languages)
     
 @user_controller.route('/get_course/<int:course_id>', methods=['GET'])
 def get_course(course_id):

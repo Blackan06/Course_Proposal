@@ -1,16 +1,8 @@
-<<<<<<<< HEAD:migrations/versions/e9ca7f08392c_add.py
-"""add
+"""initial
 
-Revision ID: e9ca7f08392c
+Revision ID: c0a2e058c6dd
 Revises: 
-Create Date: 2024-01-30 18:25:53.202204
-========
-"""Add course_link_image to Course
-
-Revision ID: a14934c95bf7
-Revises: 
-Create Date: 2024-01-31 08:45:03.950798
->>>>>>>> a90b75186084a08a1b16c418dd11d8da56d411c3:migrations/versions/a14934c95bf7_add_course_link_image_to_course.py
+Create Date: 2024-01-31 21:57:08.342921
 
 """
 from alembic import op
@@ -18,11 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-<<<<<<<< HEAD:migrations/versions/e9ca7f08392c_add.py
-revision = 'e9ca7f08392c'
-========
-revision = 'a14934c95bf7'
->>>>>>>> a90b75186084a08a1b16c418dd11d8da56d411c3:migrations/versions/a14934c95bf7_add_course_link_image_to_course.py
+revision = 'c0a2e058c6dd'
 down_revision = None
 branch_labels = None
 depends_on = None

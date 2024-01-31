@@ -149,27 +149,6 @@ def upload():
     
     if file:
         df = pd.read_excel(file)
-        # image_column_name = 'course_image'
-        # Iterate over rows and read images
-        # for idx, row in df.iterrows():
-            # Assume the image column contains URLs
-            # image_url = row[image_column_name]
-            # print('course_image',image_url)
-            # Download the image (you may need to use requests or another library)
-            # image_content = download_image_content(image_url)
-
-            # # Convert the image content to BytesIO
-            # image_bytesio = BytesIO(image_content)
-
-        
-        # aaaa = image_to_binary(df['course_image'])
-        # df['course_image'] = CourseService.convert_image_to_base64(df['course_image'])
-        # CourseService.convert_image_to_base64(course.course_image),
-        # df['course_image']=df['course_image'].apply(lambda image_path: image_to_binary(image_path))
-        # print('a',aaaa)
-        # for index, row in df.iterrows():
-        #     course_image = row['course_image']
-        #     image = Image.open(course_image)
         records = df.to_dict(orient='records')
         # for record in records:
         CourseService.insert_excel(records)

@@ -11,6 +11,14 @@ class CategoryService:
         return Category.query.get(category_id)
     
     @staticmethod
+    def get_category_by_name(category_name):
+        category = Category.query.filter_by(category_name=category_name).first()
+        if category:
+            return category.category_id
+        else:
+            return None 
+    
+    @staticmethod
     def create_category(category_name):
         newCategory = Category(category_name=category_name)
         db.session.add(newCategory)

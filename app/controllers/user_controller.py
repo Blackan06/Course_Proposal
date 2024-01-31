@@ -147,8 +147,18 @@ def get_course(course_id):
 
         providers = ProviderService.get_all_provider()
         categories = CategoryService.get_all_category()
+        programming_languages_list = CourseService.get_programming_language_from_course(course_id=course_id)
+        
+        programming_languages = [
+            {
+            'language_id': programming_language.language_id,
+            'name': ProgrammingLanguageService.get_programming_language_by_id(programming_language.language_id),
+            }
+            for programming_language in programming_languages_list
+        ]
 
-        return render_template('user_site/course_detail.html', course=course_with_base64_images, providers=providers, categories=categories)
+        return render_template('user_site/course_detail.html', course=course_with_base64_images, providers=providers, categories=categories,
+                                                                    programming_languages = programming_languages)
 
     except ValueError as e:
         return jsonify(error=str(e)), 400

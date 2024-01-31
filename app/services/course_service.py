@@ -157,3 +157,10 @@ class CourseService:
             
         courses = courses.filter(Course.course_rate >= max_rate).all()
         return courses
+    
+    @staticmethod
+    def get_programming_language_from_course(course_id):
+        return CourseProgrammingLanguage.query.join(
+            ProgrammingLanguage).filter(
+            CourseProgrammingLanguage.course_id == course_id).all()
+

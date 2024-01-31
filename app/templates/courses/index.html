@@ -188,8 +188,14 @@
                             </div>
                             </form>
                         </div>
-                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                class="fas fa-upload fa-sm text-white-50"></i> Import file</a>
+                        <form  action="{{ url_for('main.course_controller.upload') }}" method="post" enctype="multipart/form-data">
+                            <label for="file">Choose Excel file:</label>
+                            <input type="file" name="file" accept=".xls, .xlsx">
+                            <input class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" type="submit" value="Import file">
+                        </form>
+                    
+                        <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                                class="fas fa-upload fa-sm text-white-50"></i> Import file</a> -->
                     </div>
 
 

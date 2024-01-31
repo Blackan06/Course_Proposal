@@ -2,7 +2,6 @@ from ..services.category_service import CategoryService
 from ..services.provider_service import ProviderService
 from ..services.course_programming_language_service import CourseProgrammingLanguageService
 from ..models.data_model import db,Course,CourseProgrammingLanguage,ProgrammingLanguage 
-
 from PIL import Image
 from io import BytesIO
 import base64
@@ -56,45 +55,50 @@ class CourseService:
                 language_id=language.language_id
             )
             CourseProgrammingLanguageService.create_course_programming_language(new_course_programming_language)
-        
-
+            
         db.session.commit()
         return new_course
     
     @staticmethod
     def insert_excel(objects):   
         for obj in objects:
-            provider = ProviderService.get_provider_by_id(obj.get('provider_id',0))
-            category = CategoryService.get_category_by_id(obj.get('category_id',0))
+            # provider = ProviderService.get_provider_by_id(obj.get('provider_id',0))
+            # category = CategoryService.get_category_by_id(obj.get('category_id',0))
 
-            if not provider or not category:
-                raise ValueError("Invalid provider_id or category_id")
+            # if not provider or not category:
+            #     raise ValueError("Invalid provider_id or category_id")
 
             # Convert image to binary data
-            course_image_binary = None
-            if obj.get('course_image', 0.0):
-                image_stream = BytesIO(obj.get('course_image', 0.0).read())
-                course_image_binary = image_stream.getvalue()
+            # course_image_binary = None
+            # if obj.get('course_image', 0.0):
+            #     image_stream = BytesIO(obj.get('course_image', 0.0).read())
+            #     course_image_binary = image_stream.getvalue()
                 # course_image_float = obj.get('course_image', 0.0)
 
             # Convert float to bytes (binary)
             # course_image_data = str(course_image_float).encode('utf-8')
             new_course = Course(
-                course_name=obj.get('course_name',''),
-                course_description=obj.get('course_description',''),
-                course_rate=obj.get('course_rate',0),
-                course_path=obj.get('course_path',''),
-                provider_id=provider,
-                category_id=category,
-                course_image=course_image_binary
+                course_name=obj.get('course_name'),
+                course_description=obj.get('course_description'),
+                course_rate=obj.get('course_rate'),
+                course_path=obj.get('course_path'),
+                provider_id=obj.get('provider_id'),
+                category_id=obj.get('category_id'),
+                course_image='0'
+                # obj.get('course_image'))
             )
+            print(obj.get('course_image'))
             try:
                 db.session.add(new_course) 
                 # return new_course
+                print('ac')
+               
             except IntegrityError:
                 db.session.rollback()
         db.session.commit()
-
+        print('aaaa')
+        return new_course
+    
     @staticmethod
     def edit_course(course_id, new_course_name, new_course_description, new_course_rate, new_course_path, new_provider_id, new_category_id,new_language_ids, new_course_image):
         course = Course.query.get(course_id)
@@ -133,9 +137,6 @@ class CourseService:
                     language_id=language_id
                 )
                 db.session.add(new_course_programming_language)
-            
-            
-
 
             db.session.commit()
             return course

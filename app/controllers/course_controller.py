@@ -3,6 +3,10 @@ from ..models.data_model import Course
 from ..services.course_service import CourseService
 from ..services.provider_service import ProviderService
 from ..services.category_service import CategoryService
+import pandas as pd
+from PIL import Image
+from io import BytesIO
+
 from flask_login import login_required
 course_controller = Blueprint('course_controller', __name__, url_prefix='/course')
 
@@ -101,3 +105,88 @@ def delete(course_id):
             return redirect(url_for('course_controller.index'))
     except Exception as e:
         return jsonify(error=str(e)), 400
+
+def image_to_binary(image_path):
+    print('cccc',image_path)
+    try:
+        # Đọc hình ảnh từ tệp
+        image = Image.open(image_path)
+        print('cccc',image)
+        # Chuyển đổi hình ảnh thành dạng bytes
+        image_bytes = BytesIO()
+        image.save(image_bytes, format="JPG")  # Có thể chọn định dạng ảnh khác nếu cần
+        return image_bytes.getvalue()
+    except Exception as e:
+        print(f"Error processing image: {e}")
+        return None
+
+
+@course_controller.route('/upload', methods=['POST'])
+@login_required
+def upload():
+    if 'file' not in request.files:
+        return redirect(request.url)
+
+    file = request.files['file']
+    
+    if file.filename == '':
+        return redirect(request.url)
+    
+    if file:
+        df = pd.read_excel(file)
+
+        image_column_name = 'course_image'
+
+        # Iterate over rows and read images
+        for idx, row in df.iterrows():
+            # Assume the image column contains URLs
+            image_url = row[image_column_name]
+            print('course_image',image_url)
+            # Download the image (you may need to use requests or another library)
+            # image_content = download_image_content(image_url)
+
+            # # Convert the image content to BytesIO
+            # image_bytesio = BytesIO(image_content)
+
+        
+        aaaa = image_to_binary(df['course_image'])
+        # df['course_image'] = CourseService.convert_image_to_base64(df['course_image'])
+        # CourseService.convert_image_to_base64(course.course_image),
+        # df['course_image']=df['course_image'].apply(lambda image_path: image_to_binary(image_path))
+        print('a',aaaa)
+        # for index, row in df.iterrows():
+        #     course_image = row['course_image']
+        #     image = Image.open(course_image)
+        records = df.to_dict(orient='records')
+        # for record in records:
+        CourseService.insert_excel(records)
+        #     new_doctor = Doctor(**record)
+        #     db.session.add(new_doctor)
+
+        # db.session.commit()
+
+        return  redirect(url_for('main.course_controller.index'))
+
+
+
+# Đọc dữ liệu từ file Excel
+# wb = openpyxl.load_workbook('your_excel_file.xlsx')
+# sheet = wb.active
+
+# # Lặp qua từng dòng trong sheet
+# for row in sheet.iter_rows(min_row=2, values_only=True):
+#     name, age, image_data = row
+
+#     # Chuyển đổi hình ảnh thành dạng byte
+#     image = Image.open(BytesIO(image_data))
+#     buffer = BytesIO()
+#     image.save(buffer, format="PNG")  # Chọn định dạng ảnh theo nhu cầu của bạn
+#     byte_image = buffer.getvalue()
+#     buffer.close()
+
+#     # Lưu trữ dạng byte_image vào cơ sở dữ liệu theo nhu cầu của bạn
+#     # Ví dụ: In dạng base64 để lưu vào cơ sở dữ liệu
+#     base64_image = base64.b64encode(byte_image).decode('utf-8')
+#     print(f"Name: {name}, Age: {age}, Image in Base64: {base64_image}")
+
+# wb.close()

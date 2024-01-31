@@ -150,38 +150,10 @@ def upload():
     if file:
         df = pd.read_excel(file)
         records = df.to_dict(orient='records')
-        # for record in records:
         CourseService.insert_excel(records)
-        #     new_doctor = Doctor(**record)
-        #     db.session.add(new_doctor)
-
-        # db.session.commit()
 
         return  redirect(url_for('main.course_controller.index'))
 
-
-
-# Đọc dữ liệu từ file Excel
-# wb = openpyxl.load_workbook('your_excel_file.xlsx')
-# sheet = wb.active
-
-# # Lặp qua từng dòng trong sheet
-# for row in sheet.iter_rows(min_row=2, values_only=True):
-#     name, age, image_data = row
-
-#     # Chuyển đổi hình ảnh thành dạng byte
-#     image = Image.open(BytesIO(image_data))
-#     buffer = BytesIO()
-#     image.save(buffer, format="PNG")  # Chọn định dạng ảnh theo nhu cầu của bạn
-#     byte_image = buffer.getvalue()
-#     buffer.close()
-
-#     # Lưu trữ dạng byte_image vào cơ sở dữ liệu theo nhu cầu của bạn
-#     # Ví dụ: In dạng base64 để lưu vào cơ sở dữ liệu
-#     base64_image = base64.b64encode(byte_image).decode('utf-8')
-#     print(f"Name: {name}, Age: {age}, Image in Base64: {base64_image}")
-
-# wb.close()
 
 
 @course_controller.route('/search', methods=['POST'])

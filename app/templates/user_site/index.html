@@ -77,7 +77,7 @@
 
 	<!-- Title page -->
 	<section class="bg-overlay1 bg-img1 txt-center p-lr-15 p-tb-200"
-         style="background-image: url('{{ url_for('static', filename='images/bg-01.jpg') | safe }}');">
+		style="background-image: url('{{ url_for('static', filename='images/bg-01.jpg') | safe }}');">
 		<h2 class="ltext-105 cl0 txt-center">
 			GROUP!
 		</h2>
@@ -91,23 +91,30 @@
 								class="btn btn-default dropdown-toggle">
 								<option value="all">Category</option>
 								{% for category in categories %}
-									<option value="{{ category.category_id }}">{{ category.category_name }}</option>
+								<option value="{{ category.category_id }}">{{ category.category_name }}</option>
 								{% endfor %}
 							</select>
 							<!-- <select id="providers" name="providers" type="button"
 								class="btn btn-default dropdown-toggle">
 								<option value="all">Provider</option>
 								{% for provider in providers %}
-									<option value="{{ provider.provider_id }}">{{ provider.provider_name }}</option>
+								<option value="{{ provider.provider_id }}">{{ provider.provider_name }}</option>
 								{% endfor %}
 							</select>
 							<select id="programming_languages" name="programming_languages" type="button"
 								class="btn btn-default dropdown-toggle">
 								<option value="all">Programming Language</option>
 								{% for programming_language in programming_languages %}
-									<option value="{{ programming_language.language_id }}">{{ programming_language.language_name }}</option>
+								<option value="{{ programming_language.language_id }}">{{
+									programming_language.language_name }}</option>
 								{% endfor %}
 							</select>   -->
+							<select id="rating" name="rating" type="button" class="btn btn-default dropdown-toggle">
+								<option value="5">From 5 star</option>
+								<option value="4">From 4 star</option>
+								<option value="3">From 3 star</option>
+								<option value="2">From 2 star</option>
+							</select>
 						</div>
 						<div class="bor17 of-hidden pos-relative">
 							<input class="stext-103 cl2 plh4 size-116 p-l-28 p-r-55" type="text" placeholder="Search"
@@ -260,16 +267,13 @@
 														<span class="fa fa-star"></span>
 													{% endif %}
 												{% endfor %}
-											</p>
-											<p>Skills will learn: 
-												{% for skill in course.category.skills %}
-													<span >
-														{{ skill.skill_name }}
-													</span>
-												{% endfor %}
-											</p>
-											<p>Provider: {{ course.provider.provider_name | safe }}</p>
-										</div>
+										</p>
+										<p>Skills will learn:
+											{% for skill in course.category.skills %}
+										<div style="display: inline-block;">{{ skill.skill_name }}</div>
+										{% endfor %}
+										</p>
+										<p>Provider: {{ course.provider.provider_name | safe }}</p>
 									</div>
 								</div>
 							</div>

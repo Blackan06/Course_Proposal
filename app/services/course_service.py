@@ -47,16 +47,15 @@ class CourseService:
         )
 
         db.session.add(new_course)
-        languages = CourseProgrammingLanguage.query.filter(ProgrammingLanguage.language_id.in_(language_ids)).all()
         
-        for language in languages:
+        languages = CourseProgrammingLanguage.query.filter(ProgrammingLanguage.language_id.in_(language_ids)).all()
+        print('languages ', languages)
+        for language in language_ids:
             new_course_programming_language = CourseProgrammingLanguage(
                 course_id=new_course.course_id,
-                language_id=language.language_id
+                language_id=language,
             )
-
             db.session.add(new_course_programming_language)
-        
 
         db.session.commit()
         return new_course
@@ -117,8 +116,7 @@ class CourseService:
         return False
     
     @staticmethod
-    #def search_course_by_name(category, provider, programming_language, input_name=None):
-    def search_course_by_name(category, input_name=None):
+    def search_course_by_name(category, provider, programming_language, max_rate, input_name=None):
         courses = Course.query
         if input_name:
             courses = courses.filter(Course.course_name.ilike(f"%{input_name}%"))
@@ -132,7 +130,7 @@ class CourseService:
         #     .filter(CourseProgrammingLanguage.language_id == programming_language)
         # )
             
-        courses = courses.all()
+        courses = courses.filter(Course.course_rate >= max_rate).all()
         return courses
 
     @staticmethod

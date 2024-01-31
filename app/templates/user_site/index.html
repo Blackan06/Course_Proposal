@@ -89,21 +89,21 @@
 						<div class="input-group-btn search-panel">
 							<select id="categories" name="categories" type="button"
 								class="btn btn-default dropdown-toggle">
-								<option value="Category">Category</option>
+								<option value="all">Category</option>
 								{% for category in categories %}
 									<option value="{{ category.category_id }}">{{ category.category_name }}</option>
 								{% endfor %}
 							</select>
 							<select id="providers" name="providers" type="button"
 								class="btn btn-default dropdown-toggle">
-								<option value="Provider">Provider</option>
+								<option value="all">Provider</option>
 								{% for provider in providers %}
 									<option value="{{ provider.provider_id }}">{{ provider.provider_name }}</option>
 								{% endfor %}
 							</select>
 							<select id="programming_languages" name="programming_languages" type="button"
 								class="btn btn-default dropdown-toggle">
-								<option value="Programming Language">Programming Language</option>
+								<option value="all">Programming Language</option>
 								{% for programming_language in programming_languages %}
 									<option value="{{ programming_language.language_id }}">{{ programming_language.language_name }}</option>
 								{% endfor %}

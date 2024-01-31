@@ -43,7 +43,7 @@ def create():
             course_path = request.form['course_path']
             provider_id = request.form['provider_id']
             category_id = request.form['category_id']
-            language_id = request.form.getlist('language_id')
+            language_ids = request.form.getlist('language_id[]')
             course_image = request.files['course_image']
             CourseService.create_course(
                 course_name,
@@ -52,7 +52,7 @@ def create():
                 course_path,
                 provider_id,
                 category_id,
-                language_id,
+                language_ids,
                 course_image
             )
             return redirect(url_for('main.course_controller.index'))

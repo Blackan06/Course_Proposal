@@ -46,15 +46,15 @@ class CourseService:
         )
 
         db.session.add(new_course)
-        languages = CourseProgrammingLanguage.query.filter(ProgrammingLanguage.language_id.in_(language_ids)).all()
         
-        for language in languages:
+        languages = CourseProgrammingLanguage.query.filter(ProgrammingLanguage.language_id.in_(language_ids)).all()
+        print('languages ', languages)
+        for language in language_ids:
             new_course_programming_language = CourseProgrammingLanguage(
                 course_id=new_course.course_id,
-                language_id=language.language_id
+                language_id=language,
             )
-            CourseProgrammingLanguageService.create_course_programming_language(new_course_programming_language)
-        
+            db.session.add(new_course_programming_language)
 
         db.session.commit()
         return new_course

@@ -38,12 +38,12 @@ def search():
         input_name = request.form['coursename']
         category = request.form['categories']
         provider = request.form['providers']
-        programing_language = request.form['programing_languages']
+        programming_languages = request.form['programming_languages']
 
         print("category", category)
         print("Provider", provider)
 
-        courses = CourseService.search_course_by_name(input_name=input_name, category=category, provider=provider, programming_language=programing_language)
+        courses = CourseService.search_course_by_name(input_name=input_name, category=category, provider=provider, programming_language=programming_languages)
 
         # print('courses is here')
 
@@ -63,9 +63,9 @@ def search():
         # return render_template('users/index.html', courses=courses_with_base64_images)
         providers = ProviderService.get_all_provider()
         categories = CategoryService.get_all_category()
-        programing_languages = ProgrammingLanguageService.get_all_programming_language()
+        programming_language = ProgrammingLanguageService.get_all_programming_language()
         return render_template('user_site/result.html', courses=courses_with_base64_images, providers=providers, categories=categories, 
-                                                    programing_languages=programing_languages)
+                                                    programming_language=programming_language)
 
 @user_controller.route('/get_course_attribute', methods=['GET'])
 def get_course_attribute():

@@ -66,7 +66,7 @@
 									<form method="POST" action="{{ url_for('main.user_controller.search') }}">
 										<div class="input-group">
 											<div class="input-group-btn search-panel">
-												<select id="categories" name="categories" type="button"
+												<select id="all" name="categories" type="button"
 													class="btn btn-default dropdown-toggle">
 													<option value="all">Category</option>
 													{% for category in categories %}
@@ -75,29 +75,29 @@
 												</select>
 												<!-- <select id="providers" name="providers" type="button"
 													class="btn btn-default dropdown-toggle">
-													<option value="all">All</option>
+													<option value="all">Provider</option>
 													{% for provider in providers %}
 													<option value="{{ provider.provider_id }}">{{ provider.provider_name }}</option>
 													{% endfor %}
 												</select>
 												<select id="programming_languages" name="programming_languages" type="button"
 													class="btn btn-default dropdown-toggle">
-													<option value="all">All</option>
+													<option value="all">Programming Language</option>
 													{% for programming_language in programming_languages %}
-													<option value="{{ programming_language.language_id }}">{{ programming_language.language_name }}</option>
+													<option value="{{ programming_language.language_id }}">{{
+														programming_language.language_name }}</option>
 													{% endfor %}
-												</select>
-												<select id="rating" name="rating" type="button"
-													class="btn btn-default dropdown-toggle">
+												</select>  
+												<select id="rating" name="rating" type="button" class="btn btn-default dropdown-toggle">
 													<option value="5">From 5 star</option>
 													<option value="4">From 4 star</option>
 													<option value="3">From 3 star</option>
 													<option value="2">From 2 star</option>
-												</select>
+												</select> -->
 											</div>
 											<div class="bor17 of-hidden pos-relative">
 												<input class="stext-103 cl2 plh4 size-116 p-l-28 p-r-55" type="text" placeholder="Search"
-													id="coursename" name="coursename">
+													id="coursename" name="coursename" required>
 					
 												<button type="submit" class="flex-c-m size-122 ab-t-r fs-18 cl4 hov-cl1 trans-04">
 													<i class="zmdi zmdi-search"></i>
@@ -127,8 +127,8 @@
 						All
 					</button>
 
-					<button class=" cl6 hov1 bor3 trans-04 m-tb-5 pb-3" data-filter=".Coursera" width="200px">
-						<img src="{{url_for('static', filename = 'images/coursera.svg' ) }}" alt="" width="50%"> 
+					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 pb-3" data-filter=".Coursera">
+						<img src="{{url_for('static', filename = 'images/coursera.svg' ) }}" alt="" width="50%">
 					</button>
 
 					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".Udemy">
@@ -149,27 +149,19 @@
 				<div class="dis-none panel-filter w-full p-t-10">
 					<form method="POST" action="{{ url_for('main.user_controller.filter') }}">
 					<div class="wrap-filter flex-w bg6 w-full p-lr-40 p-t-27 p-lr-15-sm">
-						
+
 						<div class="filter-col2 p-r-15 p-b-27">
 							<div class="mtext-102 cl2 p-b-15">
 								Rating
 							</div>
 
 							<ul>
-								<li class="p-b-6">
-									<div class="form-check">
-										<input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-										<label class="form-check-label" for="exampleRadios1">
-											All
-										</label>
-									</div>
-								</li>
 
 								<li class="p-b-6">
 									<a href="#" class="filter-link stext-106 trans-04">
 										<div class="form-check">
-											<input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
-											<label class="form-check-label" for="exampleRadios1">
+											<input class="form-check-input" type="radio" id="rating" name="rating" value="5" checked>
+											<label class="form-check-label" for="exampleRadios1" value="5">
 												5 stars
 												<span class="fa fa-star checked"></span>
 												<span class="fa fa-star checked"></span>
@@ -184,7 +176,7 @@
 								<li class="p-b-6">
 									<a href="#" class="filter-link stext-106 trans-04">
 										<div class="form-check">
-											<input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+											<input class="form-check-input" type="radio" id="rating" name="rating" value="4">
 											<label class="form-check-label" for="exampleRadios1">
 												From 4 stars
 												<span class="fa fa-star checked"></span>
@@ -200,9 +192,9 @@
 								<li class="p-b-6">
 									<a href="#" class="filter-link stext-106 trans-04">
 										<div class="form-check">
-											<input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+											<input class="form-check-input" type="radio" id="rating" name="rating" value="3">
 											<label class="form-check-label" for="exampleRadios1">
-												Fro 3 stars
+												From 3 stars
 												<span class="fa fa-star checked"></span>
 												<span class="fa fa-star checked"></span>
 												<span class="fa fa-star checked"></span>
@@ -219,11 +211,20 @@
 							<div class="mtext-102 cl2 p-b-15">
 								Category
 							</div>
+
+							<div class="flex-w p-t-4 m-r--5">
+								<div class="form-check  stext-107 cl6 size-301 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
+									<input class="form-check-input" type="checkbox" value="all" id="defaultCheck1" name="categories" checked>
+									<label class="form-check-label" for="defaultCheck1">
+										All
+									</label>
+								</div>
+							</div>
 							{% for category in categories %}
 							<div class="flex-w p-t-4 m-r--5">
 								<div class="form-check  stext-107 cl6 size-301 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									<input class="form-check-input" type="radio" name="categories" value="{{ category.category_id }}">
-									<label class="form-check-label">
+									<input class="form-check-input" type="checkbox" value="{{ category.category_id }}" id="defaultCheck1" name="categories">
+									<label class="form-check-label" for="defaultCheck1">
 										{{ category.category_name }}
 									</label>
 								</div>
@@ -238,18 +239,28 @@
 
 							<div class="flex-w p-t-4 m-r--5">
 								<div class="form-check  stext-107 cl6 size-301 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									<input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+									<input class="form-check-input" type="checkbox" value="all" id="defaultCheck1" name="programming_languages" checked>
 									<label class="form-check-label" for="defaultCheck1">
-										Database
+										All
 									</label>
 								</div>
 							</div>
+
+							{% for programming_language in programming_languages %}
+							<div class="flex-w p-t-4 m-r--5">
+								<div class="form-check  stext-107 cl6 size-301 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
+									<input class="form-check-input" type="checkbox" id="programming_languages" name="programming_languages">
+									<label class="form-check-label" for="defaultCheck1">
+										{{ programming_language.language_name }}
+									</label>
+								</div>
+							</div>
+							{% endfor %}
 						</div>
 
 						<div class="filter-col2 p-b-27">
 							<button type="submit" class="btn btn-primary">Search</button>
 						</div>
-					
 					</div>
 				</form>
 				</div>
@@ -282,7 +293,11 @@
 											{% endif %}
 										{% endfor %}
 										</p>
-										<p>Skills will learn:</p>
+										<p>Skills will learn: 
+											{% for skill in course.category.skills %}
+												{{ skill.skill_name }}
+											{% endfor %}
+										</p>
 										<p>Provider: {{ course.provider.provider_name | safe }}</p>
 									</div>
 								</div>

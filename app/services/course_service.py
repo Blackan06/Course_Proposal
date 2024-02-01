@@ -47,11 +47,10 @@ class CourseService:
             course_image=course_image_binary
         )
 
-        print(new_course)
         db.session.add(new_course)
         
         languages = CourseProgrammingLanguage.query.filter(ProgrammingLanguage.language_id.in_(language_ids)).all()
-        for language in language_ids:
+        for language in language_ids: 
             new_course_programming_language = CourseProgrammingLanguage(
                 course_id=new_course.course_id,
                 language_id=language,

@@ -44,7 +44,7 @@ class CourseService:
             provider_id=provider_id,
             category_id=category_id,
             
-            course_image=None
+            course_image=course_image_binary
         )
 
         print(new_course)

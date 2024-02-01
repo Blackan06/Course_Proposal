@@ -296,6 +296,7 @@
 										<p>Skills will learn: 
 											{% for skill in course.category.skills %}
 												{{ skill.skill_name }}
+												{% if not loop.last %}, {% endif %} 
 											{% endfor %}
 										</p>
 										<p>Provider: {{ course.provider.provider_name | safe }}</p>

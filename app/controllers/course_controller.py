@@ -3,6 +3,10 @@ from ..models.data_model import Course, CourseProgrammingLanguage,ProgrammingLan
 from ..services.course_service import CourseService
 from ..services.provider_service import ProviderService
 from ..services.category_service import CategoryService
+import pandas as pd
+from PIL import Image
+from io import BytesIO
+
 from ..services.programming_language_service import ProgrammingLanguageService
 from flask_login import login_required
 course_controller = Blueprint('course_controller', __name__, url_prefix='/course')
@@ -116,6 +120,24 @@ def delete(course_id):
        
     except Exception as e:
         return jsonify(error=str(e)), 400
+
+@course_controller.route('/upload', methods=['POST'])
+@login_required
+def upload():
+    if 'file' not in request.files:
+        return redirect(request.url)
+
+    file = request.files['file']
+    
+    if file.filename == '':
+        return redirect(request.url)
+    
+    if file:
+        df = pd.read_excel(file)
+        records = df.to_dict(orient='records')
+        CourseService.insert_excel(records)
+
+        return  redirect(url_for('main.course_controller.index'))
 
 
 

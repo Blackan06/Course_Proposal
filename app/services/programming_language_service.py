@@ -9,7 +9,15 @@ class ProgrammingLanguageService:
     @staticmethod
     def get_programming_language_by_id(language_id):
         return ProgrammingLanguage.query.get(language_id)
-    
+        
+    @staticmethod
+    def get_language_by_name(language_name):
+        language = ProgrammingLanguage.query.filter_by(language_name=language_name).first()
+        if language:
+            return language.language_id
+        else:
+            return None 
+
     @staticmethod
     def create_programming_language(language_name):
         new_programming_language = ProgrammingLanguage(language_name=language_name)

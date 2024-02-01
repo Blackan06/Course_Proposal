@@ -37,7 +37,12 @@
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'css/main.css' ) }}">
 	<!--===============================================================================================-->
 </head>
-
+<style>
+	.dropdown-toggle{
+		background-color: transparent !important;
+        border: none;
+	}
+</style>
 <body class="animsition">
 
 	<!-- Header -->
@@ -223,6 +228,7 @@
 											<p>Skills will learn: 
 												{% for skill in course.category.skills %}
 													{{ skill.skill_name }}
+													{% if not loop.last %}, {% endif %} 
 												{% endfor %}
 											</p>
 											<p>Provider: {{ course.provider.provider_name | safe }}</p>
@@ -265,16 +271,17 @@
 											<hr>
 											<p> {{ course.course_rate | safe }}
 												{% for i in range(1, 6) %}
-												{% if i <= course.course_rate %} <span class="fa fa-star checked">
-													</span>
-													{% else %}
-													<span class="fa fa-star"></span>
+													{% if i <= course.course_rate %} <span class="fa fa-star checked">
+														</span>
+														{% else %}
+														<span class="fa fa-star"></span>
 													{% endif %}
-													{% endfor %}
+												{% endfor %}
 											</p>
 											<p>Skills will learn: 
 												{% for skill in course.category.skills %}
 													{{ skill.skill_name }}
+													{% if not loop.last %}, {% endif %} 
 												{% endfor %}
 											</p>
 											<p>Provider: {{ course.provider.provider_name | safe }}</p>

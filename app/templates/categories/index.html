@@ -204,12 +204,15 @@
                                                 <a
                                                     href="{{ url_for('main.category_controller.edit', category_id=category.category_id) }}"><i
                                                         class="far fa-edit"></i></i></a>
-                                                <a
-                                                    href="{{ url_for('main.category_controller.delete' , category_id=category.category_id) }}" onclick="return confirm('Are you sure you want to delete this category?')"><i
-                                                        class="fas fa-trash-alt"></i></a>
+                                                <form method="post" action="{{ url_for('main.category_controller.delete', category_id=category.category_id) }}" id="deleteForm{{ category.category_id }}" >
+                                                    <button style="font-size:9px" type="submit" class="btn btn-danger">
+                                                        <i class="fas fa-trash-alt"></i> 
+                                                    </button>
+                                                </form> 
                                                 <a
                                                     href="{{ url_for('main.skill_controller.index' , category_id=category.category_id) }}"><i
                                                         class="fas fa-virus"></i></a>
+                                                                                                       
                                             </td>
                                         </tr>
                                         {% endfor %}

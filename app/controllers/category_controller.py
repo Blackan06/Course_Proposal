@@ -43,5 +43,7 @@ def edit(category_id):
 def delete(category_id):
     try:
         success = CategoryService.delete_category(category_id)
+        return redirect(url_for('main.category_controller.index'))
+
     except Exception as e:
         return jsonify(error=str(e)), 400

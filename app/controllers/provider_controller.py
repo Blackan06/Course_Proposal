@@ -43,8 +43,10 @@ def edit(provider_id):
 @provider_controller.route('/delete/<int:provider_id>', methods=['POST'])
 @login_required
 def delete(provider_id):
-    try:
-        success = ProviderService.delete_provider(provider_id)
-       
-    except Exception as e:
-        return jsonify(error=str(e)), 400
+        try:
+            success = ProviderService.delete_provider(provider_id)
+            return redirect(url_for('main.provider_controller.index'))
+
+        except Exception as e:
+            return jsonify(error=str(e)), 400
+    

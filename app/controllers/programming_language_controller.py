@@ -46,6 +46,7 @@ def edit(language_id):
 def delete(language_id):
     try:
         success = ProgrammingLanguageService.delete_programming_language(language_id)
-       
+        return redirect(url_for('main.programming_language_controller.index'))
+
     except Exception as e:
         return jsonify(error=str(e)), 400

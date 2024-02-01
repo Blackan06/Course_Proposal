@@ -40,6 +40,7 @@ def index():
                 'category': course.category,
                 'course_programming_languages': course.course_programming_languages,
                 'course_image': CourseService.convert_image_to_base64(course.course_image),
+                
             }
             for course in pagination_courses
         ]
@@ -51,8 +52,8 @@ def index():
                                page=page, 
                                per_page=per_page,
                                pagination=pagination)
-        
-    return render_template('courses/index.html')
+    else:    
+        return render_template('courses/index.html')
  
 @course_controller.route('/create', methods=['GET', 'POST'])
 @login_required
@@ -135,7 +136,8 @@ def edit(course_id):
 def delete(course_id):
     try:
         success = CourseService.delete_course(course_id)
-       
+        return redirect(url_for('main.course_controller.index'))
+
     except Exception as e:
         return jsonify(error=str(e)), 400
 
@@ -246,6 +248,7 @@ def import_csv():
             return render_template('courses/upload.html',result=str(e))
 @course_controller.route('/recommend', methods=['POST'])
 def recommend():
+
     # Retrieve course query from the form data
     query = request.form.get('query')
 
@@ -254,16 +257,23 @@ def recommend():
 
     # Check if the query is not empty
     if query:
-        # Extract course names for vectorization
-        course_names = df['course_name'].tolist()
+        #Numberic
+        number = 10
+        per_page = 10
 
-        # Vectorize the data
-        cosine_sim_mat = CourseService.vectorize_text_to_cosine_mat(course_names)
+        total_pages = (number // per_page) + 1 if number % per_page != 0 else number // per_page
+        page = request.args.get('page', 1, type=int)
+        offset = (page - 1) * per_page
 
         # Get recommendations
-        recommendations = CourseService.get_recommendation(query, cosine_sim_mat, df)
+        recommendations = CourseService.get_recommendation(query, df,number)
+        paginated_recommendations = recommendations[offset:offset + per_page]
 
         # Check if recommendations are not empty
         if not recommendations.empty:
+            pagination = Pagination(page=page, per_page=per_page, total=number, css_framework='bootstrap4')
+
             # Render a template with the recommendations
-            return render_template('courses/error.html', recommendations=recommendations)
+            return render_template('courses/search.html', recommendations=paginated_recommendations , pagination=pagination)
+        else:
+            return redirect(url_for('main.course_controller.index'))

@@ -69,6 +69,8 @@ class CourseService:
         for obj in objects:
             provider = ProviderService.get_provider_by_name(obj.get('provider_name'))
             category = CategoryService.get_category_by_name(obj.get('category_name'))
+            print('provider',provider)
+            print('category',category)
             course_image_binary = None
             new_course = Course(
                 course_name=obj.get('course_name'),
@@ -79,8 +81,10 @@ class CourseService:
                 category_id=category,
                 course_image= course_image_binary
             )           
+            db.session.add(new_course) 
+            db.session.commit()
+
             try:
-                db.session.add(new_course) 
                 languages = [lang.strip() for lang in obj.get('languages_name').split(',')]
                 for language in languages:
                     new_course_programming_language = CourseProgrammingLanguage(
@@ -220,6 +224,7 @@ class CourseService:
             ProgrammingLanguage).filter(
             CourseProgrammingLanguage.course_id == course_id).all()
 
+    
     @staticmethod
     def import_csv_to_db(csv_file, selected_columns):
         try:
@@ -269,45 +274,44 @@ class CourseService:
     @staticmethod
     def load_data():
         courses = Course.query.all()
-        data = [{'course_id': course.course_id, 'course_name': course.course_name, 'course_path': course.course_path, 'course_category': course.category.category_name} for course in courses]
-        df = pd.DataFrame(data, columns=['course_id', 'course_name', 'course_path','course_category'])
+        data = [{'course_id': course.course_id, 'course_name': course.course_name, 'course_path': course.course_path, 'course_category': course.category.category_name, 'course_provider': course.provider.provider_name , 'rate': course.course_rate, 'course_description': course.course_description} for course in courses]
+        df = pd.DataFrame(data, columns=['course_id', 'course_name', 'course_path','course_category','course_provider', 'rate', 'course_description'])
         return df
+    
+    
+    
     @staticmethod
-    def vectorize_text_to_cosine_mat(data):
-        count_vect = CountVectorizer()
-        cv_mat = count_vect.fit_transform(data)
-        cosine_sim_mat = cosine_similarity(cv_mat)
-        return cosine_sim_mat
-    @staticmethod
-    def get_recommendation(title, cosine_sim_mat, df, num_of_rec=10):
-        # Initialize recommended_courses
+    def get_recommendation(title, df, num_of_rec):
         recommended_courses = pd.DataFrame()
 
-        # Check if the title is not empty
         if title:
-            # Check for exact match in course names
             exact_match = df[df['course_name'] == title]
 
+            # Return value if exact_match have value
             if not exact_match.empty:
-                # If exact match is found, return it
                 return exact_match.head(num_of_rec)
 
-            # Vectorize 'course_name'
+            # Vector hóa 'course_name' của tất cả các khóa học
             count_vect = CountVectorizer()
+            #Get List Course Name
             course_names = df['course_name'].tolist()
-
-            # Fit_transform to build vocabulary
+            
+            # Fit_transform
             cv_mat = count_vect.fit_transform(course_names)
-            print(cv_mat)
+
             try:
+                # Vector hóa tên khóa học đầu vào
                 title_vector = count_vect.transform([title])
             except ValueError:
-                # Handle the case where the vector for 'title' is empty
+                # Xử lý trường hợp vector cho 'title' là rỗng
                 return pd.DataFrame(columns=df.columns)
 
+            # Tính tương đồng cosine với khóa học đầu vào
             cosine_sim_with_input = cosine_similarity(title_vector, cv_mat)
 
+            # Sắp xếp các khóa học dựa trên độ tương đồng và lấy top 'num_of_rec'
             similar_courses_indices = cosine_sim_with_input.argsort()[0][::-1]
             recommended_courses = df.iloc[similar_courses_indices]
 
+        # Trả về top 'num_of_rec' khóa học được đề xuất
         return recommended_courses.head(num_of_rec)

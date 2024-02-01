@@ -5,12 +5,22 @@ from ..services.provider_service import ProviderService
 from ..services.category_service import CategoryService
 from ..services.programming_language_service import ProgrammingLanguageService
 from ..services.user_service import UserService
+from flask_paginate import Pagination
+
 user_controller = Blueprint('user_controller', __name__, url_prefix='/user')
 
 @user_controller.route('/', methods=['GET'])
 @user_controller.route('/index', methods=['GET'])
 def index():
-    courses = CourseService.get_all_courses()
+    all_courses = CourseService.get_all_courses()
+    courses_per_page = 10  
+    
+    page = request.args.get('page', 1, type=int)
+
+    pagination = Pagination(page=page, per_page=courses_per_page, total=len(all_courses), css_framework='bootstrap4')
+
+    courses = all_courses[(page - 1) * courses_per_page: page * courses_per_page]
+
     courses_with_base64_images = [
         {
             'course_id': course.course_id,
@@ -31,7 +41,7 @@ def index():
     print(categories)
     #return render_template('users/index.html', courses=courses_with_base64_images)
     return render_template('user_site/index.html', courses=courses_with_base64_images, providers=providers, categories=categories, 
-                                                    programming_languages=programming_languages)
+                                                programming_languages=programming_languages, pagination=pagination)
 
 @user_controller.route('/search', methods=['POST'])
 def search():

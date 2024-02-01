@@ -204,9 +204,12 @@
                                                 <a
                                                 href="{{ url_for('main.provider_controller.edit', provider_id=provider.provider_id) }}"><i
                                                         class="far fa-edit"></i></i></a>
-                                                <a
-                                                href="{{ url_for('main.provider_controller.delete', provider_id=provider.provider_id) }}" onclick="return confirm('Are you sure you want to delete this provider?')"><i
-                                                        class="fas fa-trash-alt"></i></a>
+                                               
+                                                <form method="post" action="{{ url_for('main.provider_controller.delete', provider_id=provider.provider_id) }}" id="deleteForm{{ provider.provider_id }}" >
+                                                    <button style="font-size:9px" type="submit" class="btn btn-danger">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                         {% endfor %}

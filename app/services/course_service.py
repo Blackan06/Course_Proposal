@@ -62,8 +62,7 @@ class CourseService:
         return new_course
     
     @staticmethod
-    def insert_excel(objects):   
-        print(objects)
+    def insert_excel(objects):  
         for obj in objects:
             provider = ProviderService.get_provider_by_name(obj.get('provider_name'))
             category = CategoryService.get_category_by_name(obj.get('category_name'))
@@ -76,12 +75,18 @@ class CourseService:
                 provider_id=provider,
                 category_id=category,
                 course_image= course_image_binary
-            )
+            )           
             try:
-                db.session.add(new_course)               
+                db.session.add(new_course) 
+                languages = [lang.strip() for lang in obj.get('languages_name').split(',')]
+                for language in languages:
+                    new_course_programming_language = CourseProgrammingLanguage(
+                        course_id=new_course.course_id,
+                        language_id= ProgrammingLanguageService.get_language_by_name(language),
+                    )
+                db.session.add(new_course_programming_language)   
             except (IndexError, ValueError) as e:
-                    print(f"Error: {e}")
-            
+                    print(f"Error: {e}") 
         db.session.commit()
         return new_course
     

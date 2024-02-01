@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendations</title>
+</head>
+<body>
+    <h1>Recommended Courses</h1>
+
+    {% if recommendations.empty %}
+        <p>No recommendations found.</p>
+    {% else %}
+        <ul>
+            {% for index, row in recommendations.iterrows() %}
+                <li>
+                    <strong>Course Name:</strong> {{ row['course_name'] }}<br>
+                    <strong>Course Path:</strong> {{ row['course_path'] }}<br>
+                    <strong>Category:</strong> {{ row['category_id'] }}<br>
+                    <!-- Add any other information you want to display -->
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>

@@ -20,7 +20,7 @@ class Course(db.Model):
     __tablename__ = 'course'
     course_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     course_name = db.Column(db.String(255), unique=True, nullable=False)
-    course_description = db.Column(db.String(255), unique=True, nullable=True)
+    course_description = db.Column(db.String(255), unique=False, nullable=True)
     course_rate = db.Column(db.Integer, unique=False, nullable=True)
     course_path = db.Column(db.String(255), unique=True, nullable=False)
     course_image = db.Column(LargeBinary, nullable=True)

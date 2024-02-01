@@ -5,15 +5,25 @@ from ..services.provider_service import ProviderService
 from ..services.category_service import CategoryService
 from ..services.programming_language_service import ProgrammingLanguageService
 from flask_login import login_required
+import pandas as pd
+from flask_paginate import Pagination, get_page_args
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
 course_controller = Blueprint('course_controller', __name__, url_prefix='/course')
 
 @course_controller.route('/', methods=['GET'])
 @course_controller.route('/index', methods=['GET'])
 @login_required
 def index():
+
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     courses = CourseService.get_all_courses()
-    if courses: 
-        
+
+    if courses:
+        total = len(courses)
+        pagination_courses = courses[offset: offset + per_page]
 
         courses_with_base64_images = [
             {
@@ -27,9 +37,17 @@ def index():
                 'course_programming_languages': course.course_programming_languages,
                 'course_image': CourseService.convert_image_to_base64(course.course_image),
             }
-            for course in courses
+            for course in pagination_courses
         ]
-        return render_template('courses/index.html', courses=courses_with_base64_images)
+
+        pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+
+        return render_template('courses/index.html', 
+                               courses=courses_with_base64_images, 
+                               page=page, 
+                               per_page=per_page,
+                               pagination=pagination)
+        
     return render_template('courses/index.html')
  
 @course_controller.route('/create', methods=['GET', 'POST'])
@@ -127,7 +145,7 @@ def search():
 
         courses_with_base64_images = [
         {
-             'course_id': course.course_id,
+            'course_id': course.course_id,
             'course_name': course.course_name,
             'course_description': course.course_description,
             'course_rate': course.course_rate,
@@ -188,3 +206,42 @@ def filter():
         categories = CategoryService.get_all_category()
 
         return render_template('courses/index.html', courses=courses_with_base64_images, providers=providers, categories=categories)
+
+@course_controller.route('/import_csv', methods=['POST'])
+def import_csv():
+    try:
+            csv_file = request.files['file']
+            if csv_file:
+                selected_columns = ['course_title', 'level', 'url', 'subject']
+
+                result = CourseService.import_csv_to_db(csv_file,  selected_columns)
+                
+                return redirect(url_for('main.course_controller.index'))
+            else:
+                return redirect(url_for('main.course_controller.index'))
+       
+    except Exception as e:
+            return render_template('courses/upload.html',result=str(e))
+@course_controller.route('/recommend', methods=['POST'])
+def recommend():
+    # Retrieve course query from the form data
+    query = request.form.get('query')
+
+    # Load data using CourseService
+    df = CourseService.load_data()
+
+    # Check if the query is not empty
+    if query:
+        # Extract course names for vectorization
+        course_names = df['course_name'].tolist()
+
+        # Vectorize the data
+        cosine_sim_mat = CourseService.vectorize_text_to_cosine_mat(course_names)
+
+        # Get recommendations
+        recommendations = CourseService.get_recommendation(query, cosine_sim_mat, df)
+
+        # Check if recommendations are not empty
+        if not recommendations.empty:
+            # Render a template with the recommendations
+            return render_template('courses/error.html', recommendations=recommendations)

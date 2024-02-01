@@ -10,6 +10,7 @@
     <meta name="author" content="">
 
     <title>Recomendation Course</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
     <!-- Custom fonts for this template-->
     <link href="{{url_for('static', filename='vendor/fontawesome-free/css/all.min.css' )}}" rel="stylesheet"
@@ -174,17 +175,20 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <div>
-                            <form method="POST" action="{{ url_for('main.course_controller.search') }}">
+                            <form method="POST" action="{{ url_for('main.course_controller.recommend') }}">
                             <div class="input-group">
 
                                 <input type="text" class="form-control bg-light border-1 small"
                                     placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2"
-                                    id="coursename" name="coursename">
+                                    id="query" name="query">
                                 <div class="input-group-append">
                                     <button class="btn btn-primary" type="submit">
                                         <i class="fas fa-search fa-sm"></i>
                                     </button>
                                 </div>
+                                {% for course in recommendations %}
+                                 <p>{{ course.course_title }} - Similarity Score: {{ course.similarity_score }} - URL: <a href="{{ course.url }}" target="_blank">{{ course.url }}</a></p>
+                                {% endfor %}
                             </div>
                             </form>
                         </div>
@@ -199,6 +203,12 @@
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Course List</h6>
                         </div>
+                        <form action="{{ url_for('main.course_controller.import_csv') }}" method="post" enctype="multipart/form-data">
+                            <label for="file">Choose a CSV file:</label>
+                            <input type="file" name="file" accept=".csv" required>
+                            <br>
+                            <button type="submit">Upload and Import</button>
+                        </form>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -249,6 +259,9 @@
 
                                         {% endfor %}
                                     </tbody>
+                                    <div class="pagination">
+                                        {{ pagination.links }}
+                                    </div>
                                 </table>
                             </div>
                         </div>

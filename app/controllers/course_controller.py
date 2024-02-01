@@ -17,8 +17,6 @@ course_controller = Blueprint('course_controller', __name__, url_prefix='/course
 def index():
     courses = CourseService.get_all_courses()
     if courses: 
-        
-
         courses_with_base64_images = [
             {
                 'course_id': course.course_id,
@@ -120,21 +118,6 @@ def delete(course_id):
        
     except Exception as e:
         return jsonify(error=str(e)), 400
-
-def image_to_binary(image_path):
-    print('cccc',image_path)
-    try:
-        # Đọc hình ảnh từ tệp
-        image = Image.open(image_path)
-        print('cccc',image)
-        # Chuyển đổi hình ảnh thành dạng bytes
-        image_bytes = BytesIO()
-        image.save(image_bytes, format="JPG")  # Có thể chọn định dạng ảnh khác nếu cần
-        return image_bytes.getvalue()
-    except Exception as e:
-        print(f"Error processing image: {e}")
-        return None
-
 
 @course_controller.route('/upload', methods=['POST'])
 @login_required

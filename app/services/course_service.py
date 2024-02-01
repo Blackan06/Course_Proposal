@@ -2,11 +2,15 @@ from ..services.category_service import CategoryService
 from ..services.provider_service import ProviderService
 from ..services.programming_language_service import ProgrammingLanguageService
 from ..services.course_programming_language_service import CourseProgrammingLanguageService
-from ..models.data_model import db,Course,CourseProgrammingLanguage,ProgrammingLanguage 
+from ..models.data_model import db,Course,CourseProgrammingLanguage,ProgrammingLanguage , Category
+import pandas as pd
 from PIL import Image
 from io import BytesIO
 import base64
-
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity,linear_kernel
 class CourseService:
     @staticmethod
     def get_all_courses():
@@ -140,7 +144,33 @@ class CourseService:
             db.session.commit()
             return True
         return False
-    
+    @staticmethod
+    def create_course_new(course_name, course_description, course_rate, course_path, provider_id, category_id):
+        provider = ProviderService.get_provider_by_id(provider_id)
+        category = CategoryService.get_category_by_id(category_id)
+
+        if not provider or not category:
+            raise ValueError("Invalid provider_id or category_id")
+
+        # Convert image to binary data
+       
+
+        new_course = Course(
+            course_name=course_name,
+            course_description=course_description,
+            course_rate=course_rate,
+            course_path=course_path,
+            provider_id=provider_id,
+            category_id=category_id,
+        )
+
+        db.session.add(new_course)
+        
+        
+
+        db.session.commit()
+        return new_course
+
     @staticmethod
     def search_course_by_name(category, provider, programming_language, max_rate, input_name=None):
         courses = Course.query
@@ -190,3 +220,94 @@ class CourseService:
             ProgrammingLanguage).filter(
             CourseProgrammingLanguage.course_id == course_id).all()
 
+    @staticmethod
+    def import_csv_to_db(csv_file, selected_columns):
+        try:
+            if csv_file:
+                df = pd.read_csv(csv_file, usecols=selected_columns)
+
+                # Loop through rows and call create_course_function for each row
+                for index, row in df.iterrows():
+                    print(f"Adding course: {row['course_title']}, {row['level']}, {row['url']}")
+                    category_name = row['subject']
+                    existing_category = Category.query.filter_by(category_name=row['subject']).first()
+                    if existing_category is None:
+                            # Create a new category if it doesn't exist
+                            new_category = Category(category_name=category_name)
+                            db.session.add(new_category)
+                            db.session.flush()  # This ensures the new category gets an ID
+
+                            # Use the ID of the newly created category when creating the course
+                            category_id = new_category.category_id
+                    else:
+                            category_id = existing_category.category_id
+
+                    existing_course = Course.query.filter_by(course_name=row['course_title']).first()
+                    if existing_course is None:
+                        
+                        course = Course(
+                            course_name=row['course_title'],
+                            course_path=row['url'],
+                            course_rate=5,
+                            course_description=row['level'],
+                            provider_id=1,
+                            category_id=category_id,
+                        )
+                        db.session.add(course)
+
+                try:
+                    db.session.commit()
+                except Exception as e:
+                    print(f"Error during commit: {str(e)}")    
+
+                return 'CSV data imported successfully'
+            else:
+                return 'No file provided'
+        except Exception as e:
+            return str(e)
+
+    @staticmethod
+    def load_data():
+        courses = Course.query.all()
+        data = [{'course_id': course.course_id, 'course_name': course.course_name, 'course_path': course.course_path, 'course_category': course.category.category_name} for course in courses]
+        df = pd.DataFrame(data, columns=['course_id', 'course_name', 'course_path','course_category'])
+        return df
+    @staticmethod
+    def vectorize_text_to_cosine_mat(data):
+        count_vect = CountVectorizer()
+        cv_mat = count_vect.fit_transform(data)
+        cosine_sim_mat = cosine_similarity(cv_mat)
+        return cosine_sim_mat
+    @staticmethod
+    def get_recommendation(title, cosine_sim_mat, df, num_of_rec=10):
+        # Initialize recommended_courses
+        recommended_courses = pd.DataFrame()
+
+        # Check if the title is not empty
+        if title:
+            # Check for exact match in course names
+            exact_match = df[df['course_name'] == title]
+
+            if not exact_match.empty:
+                # If exact match is found, return it
+                return exact_match.head(num_of_rec)
+
+            # Vectorize 'course_name'
+            count_vect = CountVectorizer()
+            course_names = df['course_name'].tolist()
+
+            # Fit_transform to build vocabulary
+            cv_mat = count_vect.fit_transform(course_names)
+            print(cv_mat)
+            try:
+                title_vector = count_vect.transform([title])
+            except ValueError:
+                # Handle the case where the vector for 'title' is empty
+                return pd.DataFrame(columns=df.columns)
+
+            cosine_sim_with_input = cosine_similarity(title_vector, cv_mat)
+
+            similar_courses_indices = cosine_sim_with_input.argsort()[0][::-1]
+            recommended_courses = df.iloc[similar_courses_indices]
+
+        return recommended_courses.head(num_of_rec)

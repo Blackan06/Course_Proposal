@@ -142,21 +142,24 @@ def delete(course_id):
 @course_controller.route('/upload', methods=['POST'])
 @login_required
 def upload():
-    if 'file' not in request.files:
-        return redirect(request.url)
+    try:
+        if 'file' not in request.files:
+            return redirect(request.url)
 
-    file = request.files['file']
-    
-    if file.filename == '':
-        return redirect(request.url)
-    
-    if file:
-        df = pd.read_excel(file)
-        records = df.to_dict(orient='records')
-        CourseService.insert_excel(records)
-
-        return  redirect(url_for('main.course_controller.index'))
-
+        file = request.files['file']
+        
+        if file.filename == '':
+            return redirect(request.url)
+        
+        if file:
+            df = pd.read_excel(file)
+            # gọi hàm dictionary ra để set key value 
+            records = df.to_dict(orient='records')
+            CourseService.insert_excel(records)
+            return  redirect(url_for('main.course_controller.index'))
+            
+    except Exception as e:
+            return str(e)
 
 
 @course_controller.route('/search', methods=['POST'])

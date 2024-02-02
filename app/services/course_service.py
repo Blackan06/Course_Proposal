@@ -91,7 +91,7 @@ class CourseService:
             except (IndexError, ValueError) as e:
                     print(f"Error: {e}") 
         db.session.commit()
-        return new_course
+        return 'CSV data imported successfully'
     
     @staticmethod
     def edit_course(course_id, new_course_name, new_course_description, new_course_rate, new_course_path, new_provider_id, new_category_id,new_language_ids, new_course_image):
@@ -153,8 +153,6 @@ class CourseService:
             raise ValueError("Invalid provider_id or category_id")
 
         # Convert image to binary data
-       
-
         new_course = Course(
             course_name=course_name,
             course_description=course_description,
@@ -163,11 +161,7 @@ class CourseService:
             provider_id=provider_id,
             category_id=category_id,
         )
-
         db.session.add(new_course)
-        
-        
-
         db.session.commit()
         return new_course
 
